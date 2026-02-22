@@ -20,6 +20,15 @@ public class MenuStickNavigator : MonoBehaviour
     [Header("Visual")]
     public float selectedScale = 1.06f; // 選択中の拡大率
 
+    [Header("Dpad Repeat")]
+public float firstRepeatDelay = 0.35f; // 長押し開始まで
+public float repeatInterval = 0.18f;   // リピート間隔
+float holdTimer;
+float repTimer;
+
+[Header("Dpad Stick (replace VirtualStick)")]
+public VirtualStickDpad dpad; // ★ VirtualStick の代わり
+
     Button[] items;
     int index;
 
@@ -41,47 +50,49 @@ public class MenuStickNavigator : MonoBehaviour
     Select(index);
 }
     void Update()
+{
+    if (items == null || items.Length == 0) return;
+
+    // ---- 4方向タップ/長押し（StickBG内） ----
+    if (dpad != null)
     {
-        if (items == null || items.Length == 0) return;
+        var dir = dpad.CurrentDir;
 
-        timer -= Time.unscaledDeltaTime;
+        
 
-        // ---- スティック上下で選択移動 ----
-        float v = (stick != null) ? stick.Value.y : Input.GetAxisRaw("Vertical");
-
-        if (timer <= 0f)
+        // 短タップ：押した瞬間に1回
+        if (dpad.DownThisFrame && dir != VirtualStickDpad.Dir.None)
         {
-            if (v > moveThreshold)
-            {
-                Move(up: true);
-                timer = repeatDelay;
-            }
-            else if (v < -moveThreshold)
-            {
-                Move(up: false);
-                timer = repeatDelay;
-            }
+            Step(dir);
+            holdTimer = 0f;
+            repTimer = firstRepeatDelay;
         }
 
-        // ---- Aで決定 ----
-        bool aDown = Input.GetKeyDown(KeyCode.Space);
-        if (btnA != null) aDown |= btnA.Down;
-
-        if (aDown)
+        // 長押し：押してる間リピート
+        if (dpad.IsHeld && dir != VirtualStickDpad.Dir.None)
         {
-            // クリックと同じ＝一番堅い
-            items[index].onClick.Invoke();
-        }
+            holdTimer += Time.unscaledDeltaTime;
+            repTimer -= Time.unscaledDeltaTime;
 
-        // ---- Bで閉じる ----
-        bool bDown = Input.GetKeyDown(KeyCode.Escape);
-        if (btnB != null) bDown |= btnB.Down;
-
-        if (bDown && pauseMenu != null)
-        {
-            pauseMenu.Toggle();
+            // firstRepeatDelay 以降、repeatIntervalで連打
+            if (holdTimer >= firstRepeatDelay && repTimer <= 0f)
+            {
+                Step(dir);
+                repTimer = repeatInterval;
+            }
         }
     }
+
+    // ---- Aで決定 ----
+    bool aDown = Input.GetKeyDown(KeyCode.Space);
+    if (btnA != null) aDown |= btnA.Down;
+    if (aDown) items[index].onClick.Invoke();
+
+    // ---- Bで閉じる ----
+    bool bDown = Input.GetKeyDown(KeyCode.Escape);
+    if (btnB != null) bDown |= btnB.Down;
+    if (bDown && pauseMenu != null) pauseMenu.Toggle();
+}
 
     void Move(bool up)
     {
@@ -162,4 +173,25 @@ public void SelectByButton(Button b)
 
     Debug.LogWarning("NOT FOUND in items: " + b.name);
 }
+void Step(VirtualStickDpad.Dir dir)
+{
+    if (items == null || items.Length == 0) return;
+
+    // ★メニューの上下は自前のindexで確実に動かす
+    if (dir == VirtualStickDpad.Dir.Up)   { Move(up: true);  return; }
+    if (dir == VirtualStickDpad.Dir.Down) { Move(up: false); return; }
+
+    // 左右は（今は）無視 or 後でタブ切り替えに使う
+    if (dir == VirtualStickDpad.Dir.Left)
+    {
+        // TODO: タブ左へ（Party/Gear/Quest…）など
+        return;
+    }
+    if (dir == VirtualStickDpad.Dir.Right)
+    {
+        // TODO: タブ右へ
+        return;
+    }
 }
+}
+

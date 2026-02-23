@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 
 public class PauseMenu : MonoBehaviour
 {
+    public MenuStickNavigator navigator; // ★追加
     public GameObject pausePanel;
 
     [Header("Tab Panels")]
@@ -54,10 +55,13 @@ public class PauseMenu : MonoBehaviour
 
         if (on)
         {
-            ShowParty();
+        ShowParty();
 
-            if (firstSelected != null)
-                EventSystem.current.SetSelectedGameObject(firstSelected);
+        // ★初回だけfirstSelected、それ以降はnavigatorに任せる
+        if (navigator != null)
+        navigator.RestoreSelectionOrFirst(firstSelected);
+        else if (firstSelected != null && EventSystem.current != null)
+        EventSystem.current.SetSelectedGameObject(firstSelected);
         }
     }
 

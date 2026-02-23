@@ -116,6 +116,8 @@ public VirtualStickDpad dpad; // ★ VirtualStick の代わり
 
     if (pauseMenu != null)
         pauseMenu.PreviewBySelected(items[i].gameObject);
+
+        lastIndex = index; // ★これで常に記憶される
 }
 
     void UpdateVisual(int selectedIndex)
@@ -217,5 +219,41 @@ bool IsMyItem(GameObject go)
     }
     return false;
 }
+
+static int lastIndex = 0; // 前回選択の記憶（シーン内で保持）
+
+public void RestoreSelectionOrFirst(GameObject firstSelected)
+{
+    if (items == null || items.Length == 0) return;
+
+    // もしlastIndexが壊れてたら0に
+    if (lastIndex < 0 || lastIndex >= items.Length) lastIndex = 0;
+
+    // 初回だけ firstSelected が指定されてるなら、それを優先して index を合わせる
+    if (lastIndex == 0 && firstSelected != null)
+    {
+        var b = firstSelected.GetComponent<Button>();
+        if (b != null)
+        {
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (items[i] == b)
+                {
+                    index = i;
+                    Select(index);
+                    lastIndex = index;
+                    return;
+                }
+            }
+        }
+    }
+
+    // 通常は lastIndex に復帰
+    index = lastIndex;
+    Select(index);
+}
+
+
+
 }
 

@@ -105,17 +105,18 @@ public VirtualStickDpad dpad; // ★ VirtualStick の代わり
     }
 
     void Select(int i)
-    {
-        // EventSystem上の選択も合わせる（安定）
-        if (EventSystem.current != null)
-            EventSystem.current.SetSelectedGameObject(items[i].gameObject);
+{
+    // EventSystem上の選択も合わせる（外れ防止）
+    if (EventSystem.current != null)
+        EventSystem.current.SetSelectedGameObject(items[i].gameObject);
 
-        items[i].Select();     // Buttonの選択状態（任意だけど安定）
-        UpdateVisual(i);       // ★RPG見た目
+    // items[i].Select();  // ←基本OFF推奨（標準の色遷移が邪魔になりやすい）
 
-        if (pauseMenu != null)
-            pauseMenu.PreviewBySelected(items[i].gameObject);
-    }
+    UpdateVisual(i);
+
+    if (pauseMenu != null)
+        pauseMenu.PreviewBySelected(items[i].gameObject);
+}
 
     void UpdateVisual(int selectedIndex)
     {
@@ -192,6 +193,29 @@ void Step(VirtualStickDpad.Dir dir)
         // TODO: タブ右へ
         return;
     }
+}
+
+void LateUpdate()
+{
+    if (items == null || items.Length == 0) return;
+    if (EventSystem.current == null) return;
+
+    var cur = EventSystem.current.currentSelectedGameObject;
+
+    // null（外タップ等） or 関係ないUIが選ばれたら、必ず戻す
+    if (cur == null || !IsMyItem(cur))
+    {
+        EventSystem.current.SetSelectedGameObject(items[index].gameObject);
+    }
+}
+
+bool IsMyItem(GameObject go)
+{
+    for (int i = 0; i < items.Length; i++)
+    {
+        if (items[i] != null && items[i].gameObject == go) return true;
+    }
+    return false;
 }
 }
 

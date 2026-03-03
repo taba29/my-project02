@@ -25,3 +25,5 @@ Assets/AssetStoreTools*
 *.jks
 *.aab
 *.apk
+
+.idea/

@@ -10,7 +10,7 @@ public class StageSelector : MonoBehaviour
     {
         if (I != null) { Destroy(gameObject); return; }
         I = this;
-        DontDestroyOnLoad(gameObject);
+        
     }
 
     public void SelectStage(StageDefinition stage)

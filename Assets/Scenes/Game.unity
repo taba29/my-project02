@@ -1279,6 +1279,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1315953382}
   - component: {fileID: 1315953385}
+  - component: {fileID: 1315953386}
   - component: {fileID: 1315953384}
   - component: {fileID: 1315953383}
   m_Layer: 5
@@ -1362,6 +1363,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1315953381}
   m_CullTransparentMesh: 1
+--- !u!114 &1315953386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315953381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31ebe530e8fde415985872b02518a8ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  knob: {fileID: 0}
+  radius: 150
 --- !u!1 &1388197251
 GameObject:
   m_ObjectHideFlags: 0
@@ -1373,7 +1388,6 @@ GameObject:
   - component: {fileID: 1388197252}
   - component: {fileID: 1388197255}
   - component: {fileID: 1388197254}
-  - component: {fileID: 1388197253}
   m_Layer: 5
   m_Name: StickKnob
   m_TagString: Untagged
@@ -1400,20 +1414,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1388197253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1388197251}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31ebe530e8fde415985872b02518a8ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  knob: {fileID: 1388197252}
-  radius: 150
 --- !u!114 &1388197254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1735,7 +1735,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 30
-  stick: {fileID: 0}
+  stick: {fileID: 1315953384}
 --- !u!1 &1830136741
 GameObject:
   m_ObjectHideFlags: 0

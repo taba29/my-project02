@@ -37,8 +37,11 @@ public class PlayerMover : MonoBehaviour
         if (stick == null) return;
 
         Vector2 input = stick.Value;
+        Debug.Log($"stick.Value = {input}");
 
         Vector2Int dir = GetCardinalInput(input);
+        Debug.Log($"dir = {dir}");
+
         if (dir == Vector2Int.zero) return;
 
         targetPosition = transform.position + new Vector3(
@@ -55,13 +58,9 @@ public class PlayerMover : MonoBehaviour
         if (input.magnitude < 0.5f) return Vector2Int.zero;
 
         if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
-        {
             return input.x > 0 ? Vector2Int.right : Vector2Int.left;
-        }
         else
-        {
             return input.y > 0 ? Vector2Int.up : Vector2Int.down;
-        }
     }
 
     private void SnapToGridCenter()

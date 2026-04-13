@@ -3,13 +3,13 @@ using UnityEngine.EventSystems;
 
 public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    [SerializeField] RectTransform knob;      // StickKnob
-    [SerializeField] float radius = 150f;     // BGの半径くらい
-    public Vector2 Value { get; private set; } // -1..1
+    [SerializeField] private RectTransform knob;   // StickKnob
+    [SerializeField] private float radius = 150f;
+    public Vector2 Value { get; private set; }
 
-    RectTransform rt;
-    Canvas canvas;
-    Camera uiCam;
+    private RectTransform rt;
+    private Canvas canvas;
+    private Camera uiCam;
 
     void Awake()
     {
@@ -19,16 +19,29 @@ public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
         ResetKnob();
     }
 
-    public void OnPointerDown(PointerEventData e) => OnDrag(e);
+    public void OnPointerDown(PointerEventData e)
+    {
+        OnDrag(e);
+    }
 
     public void OnDrag(PointerEventData e)
     {
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rt, e.position, uiCam, out var local))
             return;
 
-        var clamped = Vector2.ClampMagnitude(local, radius);
+        // Rectの中心基準に変換する
+        Vector2 centerOffset = local - rt.rect.center;
+
+        // 半径内に収める
+        Vector2 clamped = Vector2.ClampMagnitude(centerOffset, radius);
+
+        // ノブ移動
         knob.anchoredPosition = clamped;
-        Value = clamped / radius; // -1..1
+
+        // -1 ～ 1
+        Value = clamped / radius;
+
+        Debug.Log($"local={local} centerOffset={centerOffset} value={Value}");
     }
 
     public void OnPointerUp(PointerEventData e)
@@ -37,8 +50,9 @@ public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
         ResetKnob();
     }
 
-    void ResetKnob()
+    private void ResetKnob()
     {
-        if (knob) knob.anchoredPosition = Vector2.zero;
+        if (knob != null)
+            knob.anchoredPosition = Vector2.zero;
     }
 }

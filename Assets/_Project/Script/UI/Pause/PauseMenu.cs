@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
-    public MenuStickNavigator navigator; // ★追加
+    public MenuStickNavigator navigator;
     public GameObject pausePanel;
 
     [Header("Tab Panels")]
@@ -17,57 +18,94 @@ public class PauseMenu : MonoBehaviour
     public GameObject firstSelected;
 
     [Header("B Button (optional)")]
-    //public PressButton btnB;
+    public PressButton btnB;
+
+    [Header("Map Menu Switcher")]
+    public MapMenuSwitcher mapMenuSwitcher;
+
+    [Header("Main Menu Root")]
+    [SerializeField] private GameObject mainMenuPanel;
+private Image mainMenuPanelImage;
 
     bool paused;
 
-    void Start()
+ void Awake()
+{
+    paused = false;
+
+    if (pausePanel != null)
+        pausePanel.SetActive(false);
+
+    if (mainMenuPanel != null)
     {
-        SetPaused(false);
+        mainMenuPanelImage = mainMenuPanel.GetComponent<Image>();
+        if (mainMenuPanelImage != null)
+            mainMenuPanelImage.enabled = false;
     }
+
+    Time.timeScale = 1f;
+}
 
     void Update()
     {
         if (!paused) return;
 
         bool bDown = Input.GetKeyDown(KeyCode.Escape);
-        //if (btnB != null) bDown |= btnB.Down;
+        if (btnB != null) bDown |= btnB.Down;
 
         if (bDown)
         {
             if (IsAnySubPanelOpen())
+            {
                 CloseSubPanels();
+            }
             else
-                SetPaused(false);
+            {
+                if (mapMenuSwitcher != null)
+                    mapMenuSwitcher.CloseMenuFromPauseMenu();
+                else
+                    SetPaused(false);
+            }
         }
     }
 
     public void Toggle() => SetPaused(!paused);
 
     public void SetPaused(bool on)
+{
+    paused = on;
+
+    if (pausePanel != null)
+        pausePanel.SetActive(on);
+
+    if (mainMenuPanelImage != null)
+        mainMenuPanelImage.enabled = on;
+
+    Time.timeScale = on ? 0f : 1f;
+
+    if (on)
     {
-        paused = on;
-
-        if (pausePanel != null)
-            pausePanel.SetActive(on);
-
-        Time.timeScale = on ? 0f : 1f;
-
-        if (on)
-        {
         ShowParty();
 
-        // ★初回だけfirstSelected、それ以降はnavigatorに任せる
         if (navigator != null)
-        navigator.RestoreSelectionOrFirst(firstSelected);
+            navigator.RestoreSelectionOrFirst(firstSelected);
         else if (firstSelected != null && EventSystem.current != null)
-        EventSystem.current.SetSelectedGameObject(firstSelected);
-        }
+            EventSystem.current.SetSelectedGameObject(firstSelected);
+    }
+    else
+    {
+        CloseSubPanels();
+    }
+}
+
+    public void OnClickResume()
+    {
+        if (mapMenuSwitcher != null)
+            mapMenuSwitcher.CloseMenuFromPauseMenu();
+        else
+            SetPaused(false);
     }
 
-    public void OnClickResume() => SetPaused(false);
-
-    // ---- Tabs ----
     void HideAll()
     {
         if (panelParty) panelParty.SetActive(false);
@@ -94,16 +132,14 @@ public class PauseMenu : MonoBehaviour
     public void ShowAchieve() { HideAll(); if (panelAchieve) panelAchieve.SetActive(true); }
     public void ShowReport()  { HideAll(); if (panelReport) panelReport.SetActive(true); }
 
-public void PreviewBySelected(GameObject selected)
-{
-    if (selected == null) return;
+    public void PreviewBySelected(GameObject selected)
+    {
+        if (selected == null) return;
 
-    // 名前で判定（最短）。慣れたらDictionaryでもOK
-    if (selected.name.Contains("Party")) ShowParty();
-    else if (selected.name.Contains("Gear")) ShowGear();
-    else if (selected.name.Contains("Quest")) ShowQuest();
-    else if (selected.name.Contains("Achieve")) ShowAchieve();
-    else if (selected.name.Contains("Report")) ShowReport();
-}
-
+        if (selected.name.Contains("Party")) ShowParty();
+        else if (selected.name.Contains("Gear")) ShowGear();
+        else if (selected.name.Contains("Quest")) ShowQuest();
+        else if (selected.name.Contains("Achieve")) ShowAchieve();
+        else if (selected.name.Contains("Report")) ShowReport();
+    }
 }

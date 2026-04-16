@@ -27,3 +27,6 @@ Assets/AssetStoreTools*
 *.apk
 
 .idea/
+
+mono_crash.*.json
+*_BurstDebugInformation_DoNotShip/

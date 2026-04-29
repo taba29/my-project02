@@ -37,10 +37,10 @@ public class PlayerMover : MonoBehaviour
         if (stick == null) return;
 
         Vector2 input = stick.Value;
-        Debug.Log($"stick.Value = {input}");
+        //Debug.Log($"stick.Value = {input}");
 
         Vector2Int dir = GetCardinalInput(input);
-        Debug.Log($"dir = {dir}");
+        //Debug.Log($"dir = {dir}");
 
         if (dir == Vector2Int.zero) return;
 

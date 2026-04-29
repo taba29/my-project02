@@ -12397,7 +12397,6 @@ GameObject:
   - component: {fileID: 1544633024}
   - component: {fileID: 1544633023}
   - component: {fileID: 1544633028}
-  - component: {fileID: 1544633026}
   - component: {fileID: 1544633027}
   m_Layer: 0
   m_Name: EnemySymbol_01
@@ -12518,18 +12517,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1544633026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1544633022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38cd4535206ae477482b86e2b6236eda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1544633027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14030,7 +14017,6 @@ GameObject:
   - component: {fileID: 1869414360}
   - component: {fileID: 1869414359}
   - component: {fileID: 1869414358}
-  - component: {fileID: 1869414357}
   - component: {fileID: 1869414356}
   m_Layer: 0
   m_Name: EnemySymbol_02
@@ -14053,18 +14039,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uniqueEnemyId: map01_enemy_002
   enemyData: {fileID: 11400000, guid: 8cb22bfd9ee764abe906cfb1cad57b65, type: 2}
---- !u!114 &1869414357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1869414355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38cd4535206ae477482b86e2b6236eda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1869414358
 MonoBehaviour:
   m_ObjectHideFlags: 0

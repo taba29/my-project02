@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyId: enemy_001
   enemyName: Slime
-  maxHP: 20
+  maxHP: 10
   attackPower: 4
   enemySprite: {fileID: 0}
   battleBackgroundSprite: {fileID: 0}

@@ -35,22 +35,18 @@ public class MapEnemyCleaner : MonoBehaviour
     }
 
     private void RemoveDefeatedEnemy()
+{
+    BattleEnemy[] enemies = FindObjectsOfType<BattleEnemy>();
+
+    foreach (BattleEnemy enemy in enemies)
     {
-        if (!BattleState.playerWon) return;
-        if (string.IsNullOrEmpty(BattleState.currentEnemyId)) return;
-
-        BattleEnemy[] enemies = FindObjectsOfType<BattleEnemy>();
-
-        foreach (BattleEnemy enemy in enemies)
+        if (DefeatedEnemyManager.IsDefeated(enemy.uniqueEnemyId))
         {
-            if (enemy.uniqueEnemyId == BattleState.currentEnemyId)
-            {
-                Destroy(enemy.gameObject);
-                break;
-            }
+            Destroy(enemy.gameObject);
         }
-
-        BattleState.playerWon = false;
-        BattleState.currentEnemyId = "";
     }
+
+    BattleState.playerWon = false;
+    BattleState.currentEnemyId = "";
+}
 }

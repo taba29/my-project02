@@ -102,6 +102,8 @@ public class BattleSceneController : MonoBehaviour
             BattleState.playerWon = true;
             BattleState.playerDefeated = false;
 
+            DefeatedEnemyManager.AddDefeatedEnemy(BattleState.currentEnemyId);
+
             resultText.text = "Victory!";
             yield return new WaitForSeconds(1.2f);
             SceneManager.LoadScene("Map01");

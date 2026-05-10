@@ -9,6 +9,10 @@ public class PlayerMover : MonoBehaviour
     private bool isMoving = false;
     private Vector3 targetPosition;
 
+    public Vector2Int FacingDirection { get; private set; } = Vector2Int.down;
+    public bool IsMoving => isMoving;
+    public float CellSize => cellSize;
+
     void Start()
     {
         SnapToGridCenter();
@@ -37,12 +41,11 @@ public class PlayerMover : MonoBehaviour
         if (stick == null) return;
 
         Vector2 input = stick.Value;
-        //Debug.Log($"stick.Value = {input}");
-
         Vector2Int dir = GetCardinalInput(input);
-        //Debug.Log($"dir = {dir}");
 
         if (dir == Vector2Int.zero) return;
+
+        FacingDirection = dir;
 
         targetPosition = transform.position + new Vector3(
             dir.x * cellSize,
@@ -58,14 +61,19 @@ public class PlayerMover : MonoBehaviour
         if (input.magnitude < 0.5f) return Vector2Int.zero;
 
         if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
+        {
             return input.x > 0 ? Vector2Int.right : Vector2Int.left;
+        }
         else
+        {
             return input.y > 0 ? Vector2Int.up : Vector2Int.down;
+        }
     }
 
     private void SnapToGridCenter()
     {
         Vector3 p = transform.position;
+
         transform.position = new Vector3(
             Mathf.Round(p.x / cellSize) * cellSize,
             Mathf.Round(p.y / cellSize) * cellSize,

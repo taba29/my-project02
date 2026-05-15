@@ -5,6 +5,8 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private float moveSpeed = 6f;
     [SerializeField] private float cellSize = 1f;
     [SerializeField] private VirtualStick stick;
+    [SerializeField] private DialogueManager dialogueManager;
+    [SerializeField] private LayerMask blockLayer;
 
     private bool isMoving = false;
     private Vector3 targetPosition;
@@ -21,6 +23,12 @@ public class PlayerMover : MonoBehaviour
 
     void Update()
     {
+
+        if (dialogueManager != null && dialogueManager.IsOpen)
+{
+    return;
+}
+
         if (isMoving)
         {
             transform.position = Vector3.MoveTowards(
@@ -47,13 +55,19 @@ public class PlayerMover : MonoBehaviour
 
         FacingDirection = dir;
 
-        targetPosition = transform.position + new Vector3(
-            dir.x * cellSize,
-            dir.y * cellSize,
-            0f
-        );
+        Vector3 nextPosition = transform.position + new Vector3(
+    dir.x * cellSize,
+    dir.y * cellSize,
+    0f
+);
 
-        isMoving = true;
+if (IsBlocked(nextPosition))
+{
+    return;
+}
+
+targetPosition = nextPosition;
+isMoving = true;
     }
 
     private Vector2Int GetCardinalInput(Vector2 input)
@@ -80,4 +94,18 @@ public class PlayerMover : MonoBehaviour
             p.z
         );
     }
+
+    private bool IsBlocked(Vector3 nextPosition)
+{
+    Vector2 checkSize = Vector2.one * (cellSize * 0.8f);
+
+    Collider2D hit = Physics2D.OverlapBox(
+        nextPosition,
+        checkSize,
+        0f,
+        blockLayer
+    );
+
+    return hit != null;
+}
 }

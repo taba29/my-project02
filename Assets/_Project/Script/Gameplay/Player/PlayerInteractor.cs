@@ -45,6 +45,16 @@ public class PlayerInteractor : MonoBehaviour
 
         if (hit.collider == null) return;
 
+        TreasureChest chest = hit.collider.GetComponent<TreasureChest>();
+
+    if (chest != null)
+    {
+        if (dialogueManager != null)
+            dialogueManager.ShowDialogue(chest.GetMessage());
+
+        return;
+    }
+
         TalkableNPC npc = hit.collider.GetComponent<TalkableNPC>();
 
         if (npc == null) return;

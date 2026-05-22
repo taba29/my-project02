@@ -3,6 +3,7 @@ using UnityEngine;
 public class TreasureChest : MonoBehaviour
 {
     [SerializeField] private string itemName = "きずぐすり";
+    [SerializeField] private int amount = 1;
     [SerializeField] private string openedMessage = "からっぽだ。";
 
     private bool isOpened = false;
@@ -15,6 +16,12 @@ public class TreasureChest : MonoBehaviour
         }
 
         isOpened = true;
-        return itemName + "を 手に入れた！";
+
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.AddItem(itemName, amount);
+        }
+
+        return itemName + "を " + amount + "こ 手に入れた！";
     }
 }

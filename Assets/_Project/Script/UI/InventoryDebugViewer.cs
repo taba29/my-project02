@@ -6,12 +6,17 @@ public class InventoryDebugViewer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI itemText;
 
+    void Start()
+    {
+    Refresh();
+    }
+
     public void Refresh()
     {
         if (itemText == null) return;
         if (InventoryManager.Instance == null)
         {
-            itemText.text = "InventoryManager がありません";
+            itemText.text = "";
             return;
         }
 

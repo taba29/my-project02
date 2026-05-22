@@ -5,6 +5,6 @@ public class OpenItemsSceneButton : MonoBehaviour
 {
     public void OpenItemsScene()
     {
-        SceneManager.LoadScene("ItemsScene");
+        SceneManager.LoadScene("ItemScene");
     }
 }

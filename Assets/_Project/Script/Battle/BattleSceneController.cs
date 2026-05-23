@@ -26,7 +26,7 @@ public class BattleSceneController : MonoBehaviour
     [SerializeField] private float shakeTime = 0.2f;
 
     [Header("Player Status")]
-    [SerializeField] private int playerHP = 30;
+    
     [SerializeField] private int playerAttackPower = 5;
 
     [Header("Enemy Status")]
@@ -113,14 +113,14 @@ public class BattleSceneController : MonoBehaviour
         resultText.text = enemyName + " Attack!";
         yield return new WaitForSeconds(0.5f);
 
-        playerHP -= enemyAttackPower;
-        if (playerHP < 0) playerHP = 0;
+        PartyState.currentHP -= enemyAttackPower;
+if (PartyState.currentHP < 0) PartyState.currentHP = 0;
         UpdateHPText();
 
         resultText.text = "Player took " + enemyAttackPower + " damage!";
         yield return new WaitForSeconds(0.7f);
 
-        if (playerHP <= 0)
+        if (PartyState.currentHP <= 0)
         {
             battleEnded = true;
             BattleState.playerWon = false;
@@ -143,7 +143,10 @@ public class BattleSceneController : MonoBehaviour
 
     private void UpdateHPText()
     {
-        playerHPText.text = "Player HP: " + playerHP;
+        playerHPText.text =
+    PartyState.monsterName + " HP: " +
+    PartyState.currentHP + " / " +
+    PartyState.maxHP;
         enemyHPText.text = enemyName + " HP: " + enemyHP;
     }
 

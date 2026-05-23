@@ -3534,7 +3534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad7a9370ae4714e718b15f37b42a930c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: TestScene
+  sceneName: PartyScene
 --- !u!114 &596526743
 MonoBehaviour:
   m_ObjectHideFlags: 0

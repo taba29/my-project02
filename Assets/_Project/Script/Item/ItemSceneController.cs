@@ -9,9 +9,13 @@ public class ItemSceneController : MonoBehaviour
     [SerializeField] private GameObject targetSelectPanel;
     [SerializeField] private RectTransform targetPanelRect;
     [SerializeField] private GameObject potionButton;
+    [SerializeField] private TMP_Text messageText;
+    [SerializeField] private TMP_Text hpText;
 
     private void Start()
-    {
+    {   
+        messageText.gameObject.SetActive(false);
+
         if (targetSelectPanel != null)
         {
             targetSelectPanel.SetActive(false);
@@ -20,6 +24,8 @@ public class ItemSceneController : MonoBehaviour
         targetPanelRect.anchoredPosition = new Vector2(0, -800);
 
         UpdateItemText();
+        UpdateItemText();
+        UpdateHPText();
     }
 
     public void OpenTargetSelect()
@@ -47,7 +53,8 @@ public class ItemSceneController : MonoBehaviour
             return;
 
         if (PartyState.currentHP >= PartyState.maxHP)
-            return;
+            {ShowMessage("つかっても こうかが なかった！");
+            return;}
 
         PartyState.currentHP += 20;
 
@@ -59,6 +66,7 @@ public class ItemSceneController : MonoBehaviour
         InventoryManager.Instance.RemoveItem("きずぐすり", 1);
 
         UpdateItemText();
+        UpdateHPText();
 
         CloseTargetSelect();
     }
@@ -133,4 +141,26 @@ public class ItemSceneController : MonoBehaviour
 
         targetSelectPanel.SetActive(false);
     }
+
+    private void ShowMessage(string message)
+{
+    StopCoroutine(nameof(HideMessage));
+
+    messageText.gameObject.SetActive(true);
+    messageText.text = message;
+
+    StartCoroutine(HideMessage());
+}
+
+private IEnumerator HideMessage()
+{
+    yield return new WaitForSecondsRealtime(2f);
+
+    messageText.gameObject.SetActive(false);
+}
+
+private void UpdateHPText()
+{
+    hpText.text = "HP " + PartyState.currentHP + " / " + PartyState.maxHP;
+}
 }

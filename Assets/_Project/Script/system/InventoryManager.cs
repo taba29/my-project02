@@ -8,9 +8,16 @@ public class InventoryManager : MonoBehaviour
     private Dictionary<string, int> items = new Dictionary<string, int>();
 
     private void Awake()
+{
+    if (Instance != null && Instance != this)
     {
-        Instance = this;
+        Destroy(gameObject);
+        return;
     }
+
+    Instance = this;
+    DontDestroyOnLoad(gameObject);
+}
 
     public void AddItem(string itemName, int amount)
     {

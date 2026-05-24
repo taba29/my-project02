@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PartySceneController : MonoBehaviour
 {
@@ -19,4 +20,9 @@ public class PartySceneController : MonoBehaviour
             " / " +
             PartyState.maxHP;
     }
+
+    public void BackToMap()
+{
+    SceneManager.LoadScene("Map01");
+}
 }

@@ -8,6 +8,7 @@ public class ItemSceneController : MonoBehaviour
     [SerializeField] private TMP_Text itemText;
     [SerializeField] private GameObject targetSelectPanel;
     [SerializeField] private RectTransform targetPanelRect;
+    [SerializeField] private GameObject potionButton;
 
     private void Start()
     {
@@ -68,16 +69,30 @@ public class ItemSceneController : MonoBehaviour
     }
 
     private void UpdateItemText()
+{
+    int count = InventoryManager.Instance.GetItemCount("きずぐすり");
+
+    if (count <= 0)
     {
-        itemText.text =
-            "きずぐすり x " +
-            InventoryManager.Instance.GetItemCount("きずぐすり");
+        itemText.gameObject.SetActive(false);
+
+        if (potionButton != null)
+            potionButton.SetActive(false);
+
+        return;
     }
 
+    itemText.gameObject.SetActive(true);
+
+    if (potionButton != null)
+        potionButton.SetActive(true);
+
+    itemText.text = "きずぐすり x " + count;
+}
     private IEnumerator SlideUpPanel()
 {
     float time = 0f;
-    float duration = 2f;
+    float duration = 0.2f;
 
     targetPanelRect.anchoredPosition = new Vector2(0, 0);
 
@@ -106,7 +121,7 @@ public class ItemSceneController : MonoBehaviour
 
         while (time < duration)
         {
-            time += Time.deltaTime;
+            time += Time.unscaledDeltaTime;
 
             targetPanelRect.anchoredPosition =
                 Vector2.Lerp(start, end, time / duration);

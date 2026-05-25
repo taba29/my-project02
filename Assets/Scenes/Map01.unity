@@ -1194,6 +1194,7 @@ MonoBehaviour:
   itemName: "\u304D\u305A\u3050\u3059\u308A"
   amount: 1
   openedMessage: "\u304B\u3089\u3063\u307D\u3060\u3002"
+  chestId: Map01_Chest_02
 --- !u!212 &241611330
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4912,6 +4913,7 @@ MonoBehaviour:
   itemName: "\u304D\u305A\u3050\u3059\u308A"
   amount: 1
   openedMessage: "\u304B\u3089\u3063\u307D\u3060\u3002"
+  chestId: Map01_Chest_01
 --- !u!212 &767826257
 SpriteRenderer:
   m_ObjectHideFlags: 0

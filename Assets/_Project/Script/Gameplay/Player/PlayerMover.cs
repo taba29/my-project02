@@ -15,11 +15,18 @@ public class PlayerMover : MonoBehaviour
     public bool IsMoving => isMoving;
     public float CellSize => cellSize;
 
-    void Start()
+   void Start()
+{
+    SnapToGridCenter();
+
+    if (MapReturnState.hasReturnPosition)
     {
-        SnapToGridCenter();
-        targetPosition = transform.position;
+        transform.position = MapReturnState.returnPosition;
+        MapReturnState.hasReturnPosition = false;
     }
+
+    targetPosition = transform.position;
+}
 
     void Update()
     {

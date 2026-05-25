@@ -56,6 +56,8 @@ public class ItemSceneController : MonoBehaviour
             {ShowMessage("つかっても こうかが なかった！");
             return;}
 
+        int oldHP = PartyState.currentHP;
+
         PartyState.currentHP += 20;
 
         if (PartyState.currentHP > PartyState.maxHP)
@@ -65,10 +67,12 @@ public class ItemSceneController : MonoBehaviour
 
         InventoryManager.Instance.RemoveItem("きずぐすり", 1);
 
-        UpdateItemText();
-        UpdateHPText();
+        int newHP = PartyState.currentHP;
 
-        CloseTargetSelect();
+        UpdateItemText();
+        StartCoroutine(AnimateHP(oldHP, newHP));
+
+        
     }
 
     public void BackToParty()
@@ -162,5 +166,29 @@ private IEnumerator HideMessage()
 private void UpdateHPText()
 {
     hpText.text = "HP " + PartyState.currentHP + " / " + PartyState.maxHP;
+}
+
+private IEnumerator AnimateHP(int startHP, int endHP)
+{
+    int displayHP = startHP;
+
+    while (displayHP < endHP)
+    {
+        displayHP++;
+
+        hpText.text =
+            "HP " + displayHP + " / " + PartyState.maxHP;
+
+        yield return new WaitForSecondsRealtime(0.03f);
+    }
+}
+
+private IEnumerator UsePotionFlow(int oldHP, int newHP)
+{
+    yield return StartCoroutine(AnimateHP(oldHP, newHP));
+
+    yield return new WaitForSecondsRealtime(0.3f);
+
+    CloseTargetSelect();
 }
 }

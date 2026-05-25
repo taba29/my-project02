@@ -5,8 +5,14 @@ public class TreasureChest : MonoBehaviour
     [SerializeField] private string itemName = "きずぐすり";
     [SerializeField] private int amount = 1;
     [SerializeField] private string openedMessage = "からっぽだ。";
+    [SerializeField] private string chestId;
 
     private bool isOpened = false;
+
+    private void Start()
+    {
+        isOpened = OpenedChestState.openedChestIds.Contains(chestId);
+    }
 
     public string GetMessage()
     {
@@ -16,6 +22,7 @@ public class TreasureChest : MonoBehaviour
         }
 
         isOpened = true;
+        OpenedChestState.openedChestIds.Add(chestId);
 
         if (InventoryManager.Instance != null)
         {

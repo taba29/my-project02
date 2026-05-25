@@ -3,10 +3,23 @@ using UnityEngine.SceneManagement;
 
 public class OpenItemsSceneButton : MonoBehaviour
 {
-    public void OpenItemsScene()
-    {
-        Debug.Log("OPEN ITEM SCENE");
+    private void SaveMapPosition()
+{
+    GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-        SceneManager.LoadScene("ItemScene");
-    }
+    if (player == null)
+        return;
+
+    MapReturnState.returnPosition = player.transform.position;
+    MapReturnState.hasReturnPosition = true;
+}
+
+    public void OpenItemsScene()
+{
+    Debug.Log("OPEN ITEM SCENE");
+
+    SaveMapPosition();
+
+    SceneManager.LoadScene("ItemScene");
+}
 }

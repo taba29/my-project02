@@ -11,6 +11,8 @@ public class ItemSceneController : MonoBehaviour
     [SerializeField] private GameObject potionButton;
     [SerializeField] private TMP_Text messageText;
     [SerializeField] private TMP_Text hpText;
+    [SerializeField] private RectTransform hpBarFill;
+[SerializeField] private float maxBarWidth = 300f;
 
     private void Start()
     {   
@@ -24,8 +26,8 @@ public class ItemSceneController : MonoBehaviour
         targetPanelRect.anchoredPosition = new Vector2(0, -800);
 
         UpdateItemText();
-        UpdateItemText();
         UpdateHPText();
+        UpdateHPBar(PartyState.currentHP);
     }
 
     public void OpenTargetSelect()
@@ -70,7 +72,7 @@ public class ItemSceneController : MonoBehaviour
         int newHP = PartyState.currentHP;
 
         UpdateItemText();
-        StartCoroutine(AnimateHP(oldHP, newHP));
+        StartCoroutine(UsePotionFlow(oldHP, newHP));
 
         
     }
@@ -179,6 +181,8 @@ private IEnumerator AnimateHP(int startHP, int endHP)
         hpText.text =
             "HP " + displayHP + " / " + PartyState.maxHP;
 
+            UpdateHPBar(displayHP);
+
         yield return new WaitForSecondsRealtime(0.03f);
     }
 }
@@ -190,5 +194,15 @@ private IEnumerator UsePotionFlow(int oldHP, int newHP)
     yield return new WaitForSecondsRealtime(0.3f);
 
     CloseTargetSelect();
+}
+
+private void UpdateHPBar(int hp)
+{
+    float ratio = (float)hp / PartyState.maxHP;
+
+    Vector2 size = hpBarFill.sizeDelta;
+    size.x = maxBarWidth * ratio;
+
+    hpBarFill.sizeDelta = size;
 }
 }

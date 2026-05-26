@@ -6,6 +6,12 @@ using TMPro;
 
 public class BattleSceneController : MonoBehaviour
 {
+   [SerializeField] private RectTransform playerHPBarFill;
+[SerializeField] private RectTransform enemyHPBarFill;
+[SerializeField] private float maxPlayerHPBarWidth = 490f;
+[SerializeField] private float maxEnemyHPBarWidth = 490f;
+
+private int enemyMaxHP;
     [Header("Fade")]
     [SerializeField] private Image fadePanel;
     [SerializeField] private float fadeDuration = 0.5f;
@@ -42,7 +48,7 @@ public class BattleSceneController : MonoBehaviour
 
         UpdateHPText();
         resultText.text = "A wild " + enemyName + " appeared!";
-        backButton.gameObject.SetActive(false);
+        backButton.gameObject.SetActive(true);
 
         StartCoroutine(FadeIn());
     }
@@ -52,6 +58,7 @@ public class BattleSceneController : MonoBehaviour
         enemyName = BattleState.currentEnemyName;
         enemyHP = BattleState.currentEnemyHP;
         enemyAttackPower = BattleState.currentEnemyAttackPower;
+        enemyMaxHP = enemyHP;
 
         if (string.IsNullOrEmpty(enemyName))
         {
@@ -142,14 +149,27 @@ if (PartyState.currentHP < 0) PartyState.currentHP = 0;
     }
 
     private void UpdateHPText()
-    {
-        playerHPText.text =
-    PartyState.monsterName + " HP: " +
-    PartyState.currentHP + " / " +
-    PartyState.maxHP;
-        enemyHPText.text = enemyName + " HP: " + enemyHP;
-    }
+{
+    playerHPText.text =
+        PartyState.monsterName + " HP: " +
+        PartyState.currentHP + " / " +
+        PartyState.maxHP;
 
+    enemyHPText.text = enemyName + " HP: " + enemyHP + " / " + enemyMaxHP;
+
+    UpdateHPBar(playerHPBarFill, PartyState.currentHP, PartyState.maxHP, maxPlayerHPBarWidth);
+    UpdateHPBar(enemyHPBarFill, enemyHP, enemyMaxHP, maxEnemyHPBarWidth);
+}
+
+private void UpdateHPBar(RectTransform fill, int hp, int maxHP, float maxWidth)
+{
+    if (fill == null) return;
+
+    float ratio = (float)hp / maxHP;
+    float targetWidth = maxWidth * ratio;
+
+    StartCoroutine(AnimateHPBar(fill, targetWidth, 0.25f));
+}
     private IEnumerator FadeIn()
     {
         float time = 0f;
@@ -182,4 +202,25 @@ if (PartyState.currentHP < 0) PartyState.currentHP = 0;
 
         rt.anchoredPosition = originalPos;
     }
+
+    private IEnumerator AnimateHPBar(RectTransform fill, float targetWidth, float duration)
+{
+    float startWidth = fill.sizeDelta.x;
+    float time = 0f;
+
+    while (time < duration)
+    {
+        time += Time.unscaledDeltaTime;
+
+        Vector2 size = fill.sizeDelta;
+        size.x = Mathf.Lerp(startWidth, targetWidth, time / duration);
+        fill.sizeDelta = size;
+
+        yield return null;
+    }
+
+    Vector2 finalSize = fill.sizeDelta;
+    finalSize.x = targetWidth;
+    fill.sizeDelta = finalSize;
+}
 }

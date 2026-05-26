@@ -12,7 +12,7 @@ public class ItemSceneController : MonoBehaviour
     [SerializeField] private TMP_Text messageText;
     [SerializeField] private TMP_Text hpText;
     [SerializeField] private RectTransform hpBarFill;
-[SerializeField] private float maxBarWidth = 300f;
+[SerializeField] private float maxBarWidth = 490f;
 
     private void Start()
     {   

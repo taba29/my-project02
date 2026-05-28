@@ -8,9 +8,13 @@ public class BattleSceneController : MonoBehaviour
 {
    [SerializeField] private RectTransform playerHPBarFill;
 [SerializeField] private RectTransform enemyHPBarFill;
-[SerializeField] private float maxPlayerHPBarWidth = 490f;
-[SerializeField] private float maxEnemyHPBarWidth = 490f;
+[SerializeField] private float maxPlayerHPBarWidth = 398f;
+[SerializeField] private float maxEnemyHPBarWidth = 398f;
+[SerializeField] private TMP_Text move2Text;
+[SerializeField] private Button move2Button;
 
+
+[SerializeField] private TMP_Text move1Text;
 private int enemyMaxHP;
     [Header("Fade")]
     [SerializeField] private Image fadePanel;
@@ -23,7 +27,7 @@ private int enemyMaxHP;
     [SerializeField] private TextMeshProUGUI playerHPText;
     [SerializeField] private TextMeshProUGUI enemyHPText;
     [SerializeField] private TextMeshProUGUI resultText;
-    [SerializeField] private Button attackButton;
+    [SerializeField] private Button move1Button;
     [SerializeField] private Button backButton;
 
     [Header("Enemy View")]
@@ -49,6 +53,16 @@ private int enemyMaxHP;
         UpdateHPText();
         resultText.text = "A wild " + enemyName + " appeared!";
         backButton.gameObject.SetActive(true);
+
+        move1Text.text =
+    PartyState.move1Name + "\n" +
+    PartyState.move1PP + " / " +
+    PartyState.move1MaxPP;
+
+move2Text.text =
+    PartyState.move2Name + "\n" +
+    PartyState.move2PP + " / " +
+    PartyState.move2MaxPP;
 
         StartCoroutine(FadeIn());
     }
@@ -79,16 +93,18 @@ private int enemyMaxHP;
     }
 
     public void OnAttackButton()
-    {
-        if (battleEnded) return;
-        StartCoroutine(PlayerAttackSequence());
-    }
+{
+    OnMove1Button();
+}
 
-    private IEnumerator PlayerAttackSequence()
+    private IEnumerator PlayerAttackSequence(
+    int power,
+    string moveName)
     {
-        attackButton.interactable = false;
-
-        resultText.text = "Player Attack!";
+        move1Button.interactable = false;
+        move2Button.interactable = false;
+        
+        resultText.text = moveName + "！";
         yield return new WaitForSeconds(0.3f);
 
         if (enemyImage != null)
@@ -96,7 +112,7 @@ private int enemyMaxHP;
             yield return StartCoroutine(ShakeEnemy());
         }
 
-        enemyHP -= playerAttackPower;
+        enemyHP -= power;
         if (enemyHP < 0) enemyHP = 0;
         UpdateHPText();
 
@@ -111,36 +127,37 @@ private int enemyMaxHP;
 
             DefeatedEnemyManager.AddDefeatedEnemy(BattleState.currentEnemyId);
 
-            resultText.text = "Victory!";
-            yield return new WaitForSeconds(1.2f);
-            SceneManager.LoadScene("Map01");
+            PartyState.exp += 10;
+
+if (PartyState.exp >= PartyState.nextLevelExp)
+{
+    PartyState.level++;
+
+    PartyState.exp = 0;
+
+    PartyState.maxHP += 10;
+
+    PartyState.currentHP = PartyState.maxHP;
+
+    resultText.text =
+        "Level Up! Lv." +
+        PartyState.level;
+}
+else
+{
+    resultText.text =
+        "Victory!\nEXP +10";
+}
+
+yield return new WaitForSeconds(2f);
+
+SceneManager.LoadScene("Map01");
             yield break;
         }
+        yield return StartCoroutine(EnemyAttackSequence());
 
-        resultText.text = enemyName + " Attack!";
-        yield return new WaitForSeconds(0.5f);
-
-        PartyState.currentHP -= enemyAttackPower;
-if (PartyState.currentHP < 0) PartyState.currentHP = 0;
-        UpdateHPText();
-
-        resultText.text = "Player took " + enemyAttackPower + " damage!";
-        yield return new WaitForSeconds(0.7f);
-
-        if (PartyState.currentHP <= 0)
-        {
-            battleEnded = true;
-            BattleState.playerWon = false;
-            BattleState.playerDefeated = true;
-
-            resultText.text = "Defeat...";
-            yield return new WaitForSeconds(1.2f);
-            SceneManager.LoadScene("Map01");
-            yield break;
-        }
-
-        resultText.text = "Choose your action.";
-        attackButton.interactable = true;
+move1Button.interactable = true;
+move2Button.interactable = true;
     }
 
     public void BackToMap()
@@ -223,4 +240,110 @@ private void UpdateHPBar(RectTransform fill, int hp, int maxHP, float maxWidth)
     finalSize.x = targetWidth;
     fill.sizeDelta = finalSize;
 }
+
+public void OnMove1Button()
+{
+    if (battleEnded) return;
+
+    if (PartyState.move1PP <= 0)
+    {
+        resultText.text = "PPがない！";
+        return;
+    }
+
+    PartyState.move1PP--;
+
+    StartCoroutine(PlayerAttackSequence(PartyState.move1Power,
+        PartyState.move1Name));
 }
+
+
+
+void UpdateUI()
+{
+    enemyHPText.text = enemyName + " HP: " + enemyHP + " / " + enemyMaxHP;
+
+    move1Text.text =
+        PartyState.move1Name + "\n" +
+        PartyState.move1PP + " / " +
+        PartyState.move1MaxPP;
+
+    move2Text.text =
+        PartyState.move2Name + "\n" +
+        PartyState.move2PP + " / " +
+        PartyState.move2MaxPP;
+}
+
+public void OnMove2Button()
+{
+    if (battleEnded) return;
+
+    if (PartyState.move2PP <= 0)
+    {
+        resultText.text = "PPがない！";
+        return;
+    }
+
+    move1Button.interactable = false;
+    move2Button.interactable = false;
+
+    PartyState.move2PP--;
+
+    enemyAttackPower -= 1;
+    if (enemyAttackPower < 1) enemyAttackPower = 1;
+
+    resultText.text = PartyState.move2Name + "！\n敵の攻撃が下がった！";
+
+    UpdateUI();
+
+    StartCoroutine(Move2Sequence());
+}
+
+private IEnumerator Move2Sequence()
+{
+    yield return new WaitForSeconds(0.7f);
+
+    yield return StartCoroutine(EnemyAttackSequence());
+
+    move1Button.interactable = true;
+    move2Button.interactable = true;
+}
+
+private IEnumerator EnemyAttackSequence()
+{
+    resultText.text = enemyName + " Attack!";
+    yield return new WaitForSeconds(0.5f);
+
+    PartyState.currentHP -= enemyAttackPower;
+
+    if (PartyState.currentHP < 0)
+        PartyState.currentHP = 0;
+
+    UpdateHPText();
+
+    resultText.text =
+        "Player took " +
+        enemyAttackPower +
+        " damage!";
+
+    yield return new WaitForSeconds(0.7f);
+
+    if (PartyState.currentHP <= 0)
+    {
+        battleEnded = true;
+
+        BattleState.playerWon = false;
+        BattleState.playerDefeated = true;
+
+        resultText.text = "Defeat...";
+
+        yield return new WaitForSeconds(1.2f);
+
+        SceneManager.LoadScene("Map01");
+        yield break;
+    }
+
+    resultText.text = "Choose your action.";
+}
+}
+

@@ -13,13 +13,25 @@ public static int exp = 0;
 public static int nextLevelExp = 30;
 
 
-public static string move1Name = "たいあたり";
-public static int move1Power = 10;
-public static int move1PP = 35; 
-public static int move1MaxPP = 35;
+public static MoveData move1 = new MoveData
+{
+    moveName = "たいあたり",
+    power = 10,
+    currentPP = 35,
+    maxPP = 35,
+    accuracy = 100,
+    category = MoveCategory.Physical,
+    type = "Normal"
+};
 
-public static string move2Name = "なきごえ";
-public static int move2Power = 0;
-public static int move2PP = 40;
-public static int move2MaxPP = 40;
+public static MoveData move2 = new MoveData
+{
+    moveName = "なきごえ",
+    power = 0,
+    currentPP = 40,
+    maxPP = 40,
+    accuracy = 100,
+    category = MoveCategory.Status,
+    type = "Normal"
+};
 }

@@ -34,16 +34,16 @@ public class PartySceneController : MonoBehaviour
     " / " +
     PartyState.nextLevelExp;
 
-    move1Text.text =
-    PartyState.move1Name + " " +
-    PartyState.move1PP + " / " +
-    PartyState.move1MaxPP;
+move1Text.text =
+    PartyState.move1.moveName + " " +
+    PartyState.move1.currentPP + " / " +
+    PartyState.move1.maxPP;
 
-    move2Text.text =
-    PartyState.move2Name + " " +
-    PartyState.move2PP + " / " +
-    PartyState.move2MaxPP;
-
+move2Text.text =
+    PartyState.move2.moveName + " " +
+    PartyState.move2.currentPP + " / " +
+    PartyState.move2.maxPP;
+    
             UpdateHPBar();
     }
 

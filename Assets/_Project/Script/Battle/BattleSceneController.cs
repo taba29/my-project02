@@ -14,6 +14,7 @@ public class BattleSceneController : MonoBehaviour
 [SerializeField] private Button move2Button;
 
 
+
 [SerializeField] private TMP_Text move1Text;
 private int enemyMaxHP;
     [Header("Fade")]
@@ -35,9 +36,7 @@ private int enemyMaxHP;
     [SerializeField] private float shakeDistance = 20f;
     [SerializeField] private float shakeTime = 0.2f;
 
-    [Header("Player Status")]
     
-    [SerializeField] private int playerAttackPower = 5;
 
     [Header("Enemy Status")]
     [SerializeField] private string enemyName = "Enemy";
@@ -55,14 +54,14 @@ private int enemyMaxHP;
         backButton.gameObject.SetActive(true);
 
         move1Text.text =
-    PartyState.move1Name + "\n" +
-    PartyState.move1PP + " / " +
-    PartyState.move1MaxPP;
+        PartyState.move1.moveName + "\n" +
+        PartyState.move1.currentPP + " / " +
+        PartyState.move1.maxPP;
 
-move2Text.text =
-    PartyState.move2Name + "\n" +
-    PartyState.move2PP + " / " +
-    PartyState.move2MaxPP;
+        move2Text.text =
+        PartyState.move2.moveName + "\n" +
+        PartyState.move2.currentPP + " / " +
+        PartyState.move2.maxPP;
 
         StartCoroutine(FadeIn());
     }
@@ -97,14 +96,12 @@ move2Text.text =
     OnMove1Button();
 }
 
-    private IEnumerator PlayerAttackSequence(
-    int power,
-    string moveName)
+    private IEnumerator PlayerAttackSequence(MoveData move)
     {
         move1Button.interactable = false;
         move2Button.interactable = false;
         
-        resultText.text = moveName + "！";
+        resultText.text = move.moveName + "！";
         yield return new WaitForSeconds(0.3f);
 
         if (enemyImage != null)
@@ -112,12 +109,12 @@ move2Text.text =
             yield return StartCoroutine(ShakeEnemy());
         }
 
-        enemyHP -= power;
+        enemyHP -= move.power;
         if (enemyHP < 0) enemyHP = 0;
         UpdateHPText();
 
-        resultText.text = enemyName + " took " + playerAttackPower + " damage!";
-        yield return new WaitForSeconds(0.7f);
+       resultText.text = enemyName + " took " + move.power + " damage!";
+       yield return new WaitForSeconds(0.7f);
 
         if (enemyHP <= 0)
         {
@@ -245,16 +242,17 @@ public void OnMove1Button()
 {
     if (battleEnded) return;
 
-    if (PartyState.move1PP <= 0)
+    if (PartyState.move1.currentPP <= 0)
     {
         resultText.text = "PPがない！";
         return;
     }
 
-    PartyState.move1PP--;
+    PartyState.move1.currentPP--;
 
-    StartCoroutine(PlayerAttackSequence(PartyState.move1Power,
-        PartyState.move1Name));
+UpdateUI();
+
+StartCoroutine(PlayerAttackSequence(PartyState.move1));
 }
 
 
@@ -264,21 +262,21 @@ void UpdateUI()
     enemyHPText.text = enemyName + " HP: " + enemyHP + " / " + enemyMaxHP;
 
     move1Text.text =
-        PartyState.move1Name + "\n" +
-        PartyState.move1PP + " / " +
-        PartyState.move1MaxPP;
+    PartyState.move1.moveName + "\n" +
+    PartyState.move1.currentPP + " / " +
+    PartyState.move1.maxPP;
 
     move2Text.text =
-        PartyState.move2Name + "\n" +
-        PartyState.move2PP + " / " +
-        PartyState.move2MaxPP;
+    PartyState.move2.moveName + "\n" +
+    PartyState.move2.currentPP + " / " +
+    PartyState.move2.maxPP;
 }
 
 public void OnMove2Button()
 {
     if (battleEnded) return;
 
-    if (PartyState.move2PP <= 0)
+    if (PartyState.move2.currentPP <= 0)
     {
         resultText.text = "PPがない！";
         return;
@@ -287,12 +285,12 @@ public void OnMove2Button()
     move1Button.interactable = false;
     move2Button.interactable = false;
 
-    PartyState.move2PP--;
+    PartyState.move2.currentPP--;
 
     enemyAttackPower -= 1;
     if (enemyAttackPower < 1) enemyAttackPower = 1;
 
-    resultText.text = PartyState.move2Name + "！\n敵の攻撃が下がった！";
+    resultText.text = PartyState.move2.moveName + "！\n敵の攻撃が下がった！";
 
     UpdateUI();
 

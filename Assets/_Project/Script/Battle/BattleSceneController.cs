@@ -103,18 +103,40 @@ private int enemyMaxHP;
         
         resultText.text = move.moveName + "！";
         yield return new WaitForSeconds(0.3f);
+        
+
+        if (Random.Range(0, 100) >= move.accuracy)
+{
+    resultText.text = move.moveName + " は外れた！";
+    yield return new WaitForSeconds(0.7f);
+
+    yield return StartCoroutine(EnemyAttackSequence());
+
+    move1Button.interactable = true;
+    move2Button.interactable = true;
+
+    yield break;
+}
 
         if (enemyImage != null)
         {
             yield return StartCoroutine(ShakeEnemy());
         }
+if (move.category == MoveCategory.Status)
+{
+    resultText.text = move.moveName + " は効果を発動した！";
+    yield return new WaitForSeconds(0.7f);
+}
+else
+{
+    enemyHP -= move.power;
+    if (enemyHP < 0) enemyHP = 0;
 
-        enemyHP -= move.power;
-        if (enemyHP < 0) enemyHP = 0;
-        UpdateHPText();
+    UpdateHPText();
 
-       resultText.text = enemyName + " took " + move.power + " damage!";
-       yield return new WaitForSeconds(0.7f);
+    resultText.text = enemyName + " took " + move.power + " damage!";
+    yield return new WaitForSeconds(0.7f);
+}
 
         if (enemyHP <= 0)
         {
@@ -287,8 +309,7 @@ public void OnMove2Button()
 
     PartyState.move2.currentPP--;
 
-    enemyAttackPower -= 1;
-    if (enemyAttackPower < 1) enemyAttackPower = 1;
+    ApplyMoveEffect(PartyState.move2);
 
     resultText.text = PartyState.move2.moveName + "！\n敵の攻撃が下がった！";
 
@@ -342,6 +363,17 @@ private IEnumerator EnemyAttackSequence()
     }
 
     resultText.text = "Choose your action.";
+}
+
+private void ApplyMoveEffect(MoveData move)
+{
+    if (move.effect == "LowerAttack")
+    {
+        enemyAttackPower -= 1;
+
+        if (enemyAttackPower < 1)
+            enemyAttackPower = 1;
+    }
 }
 }
 

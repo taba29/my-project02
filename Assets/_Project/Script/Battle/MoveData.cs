@@ -20,4 +20,6 @@ public class MoveData
     public MoveCategory category;
 
     public string type;
+
+    public string effect;
 }

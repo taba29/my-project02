@@ -19,9 +19,10 @@ public static MoveData move1 = new MoveData
     power = 10,
     currentPP = 35,
     maxPP = 35,
-    accuracy = 100,
+    accuracy = 30,
     category = MoveCategory.Physical,
-    type = "Normal"
+    type = "Normal",
+    effect = ""
 };
 
 public static MoveData move2 = new MoveData
@@ -32,6 +33,7 @@ public static MoveData move2 = new MoveData
     maxPP = 40,
     accuracy = 100,
     category = MoveCategory.Status,
-    type = "Normal"
+    type = "Normal",
+    effect = "LowerAttack"
 };
 }

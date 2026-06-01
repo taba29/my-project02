@@ -124,7 +124,18 @@ private int enemyMaxHP;
         }
 if (move.category == MoveCategory.Status)
 {
-    resultText.text = move.moveName + " は効果を発動した！";
+    if (move.effect == "LowerAttack")
+    {
+        enemyAttackPower -= 1;
+        if (enemyAttackPower < 1) enemyAttackPower = 1;
+
+        resultText.text = enemyName + " の攻撃が下がった！";
+    }
+    else
+    {
+        resultText.text = move.moveName + " は効果を発動した！";
+    }
+
     yield return new WaitForSeconds(0.7f);
 }
 else

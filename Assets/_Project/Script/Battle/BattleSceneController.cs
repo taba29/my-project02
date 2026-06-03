@@ -124,17 +124,9 @@ private int enemyMaxHP;
         }
 if (move.category == MoveCategory.Status)
 {
-    if (move.effect == "LowerAttack")
-    {
-        enemyAttackPower -= 1;
-        if (enemyAttackPower < 1) enemyAttackPower = 1;
+    ApplyMoveEffect(move);
 
-        resultText.text = enemyName + " の攻撃が下がった！";
-    }
-    else
-    {
-        resultText.text = move.moveName + " は効果を発動した！";
-    }
+    resultText.text = enemyName + " の攻撃が下がった！";
 
     yield return new WaitForSeconds(0.7f);
 }
@@ -320,24 +312,12 @@ public void OnMove2Button()
 
     PartyState.move2.currentPP--;
 
-    ApplyMoveEffect(PartyState.move2);
+UpdateUI();
 
-    resultText.text = PartyState.move2.moveName + "！\n敵の攻撃が下がった！";
-
-    UpdateUI();
-
-    StartCoroutine(Move2Sequence());
+StartCoroutine(PlayerAttackSequence(PartyState.move2));
 }
 
-private IEnumerator Move2Sequence()
-{
-    yield return new WaitForSeconds(0.7f);
 
-    yield return StartCoroutine(EnemyAttackSequence());
-
-    move1Button.interactable = true;
-    move2Button.interactable = true;
-}
 
 private IEnumerator EnemyAttackSequence()
 {

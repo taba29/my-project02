@@ -36,4 +36,28 @@ public static MoveData move2 = new MoveData
     type = "Normal",
     effect = "LowerAttack"
 };
+
+public static MoveData move3 = new MoveData
+{
+    moveName = "ひっかく",
+    power = 8,
+    currentPP = 35,
+    maxPP = 35,
+    accuracy = 100,
+    category = MoveCategory.Physical,
+    type = "Normal",
+    effect = ""
+};
+
+public static MoveData move4 = new MoveData
+{
+    moveName = "まもる",
+    power = 0,
+    currentPP = 10,
+    maxPP = 10,
+    accuracy = 100,
+    category = MoveCategory.Status,
+    type = "Normal",
+    effect = ""
+};
 }

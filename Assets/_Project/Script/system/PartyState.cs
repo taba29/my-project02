@@ -21,7 +21,7 @@ public static MoveData move1 = new MoveData
     maxPP = 35,
     accuracy = 30,
     category = MoveCategory.Physical,
-    type = "Normal",
+    type = "Fire",
     effect = ""
 };
 

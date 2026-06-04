@@ -12,6 +12,10 @@ public class BattleSceneController : MonoBehaviour
 [SerializeField] private float maxEnemyHPBarWidth = 398f;
 [SerializeField] private TMP_Text move2Text;
 [SerializeField] private Button move2Button;
+[SerializeField] private TMP_Text move3Text;
+[SerializeField] private TMP_Text move4Text;
+[SerializeField] private Button move3Button;
+[SerializeField] private Button move4Button;
 
 
 
@@ -42,6 +46,7 @@ private int enemyMaxHP;
     [SerializeField] private string enemyName = "Enemy";
     [SerializeField] private int enemyHP = 20;
     [SerializeField] private int enemyAttackPower = 4;
+    [SerializeField] private string enemyType = "Grass";
 
     private bool battleEnded = false;
 
@@ -62,6 +67,16 @@ private int enemyMaxHP;
         PartyState.move2.moveName + "\n" +
         PartyState.move2.currentPP + " / " +
         PartyState.move2.maxPP;
+
+        move3Text.text =
+    PartyState.move3.moveName + "\n" +
+    PartyState.move3.currentPP + " / " +
+    PartyState.move3.maxPP;
+
+move4Text.text =
+    PartyState.move4.moveName + "\n" +
+    PartyState.move4.currentPP + " / " +
+    PartyState.move4.maxPP;
 
         StartCoroutine(FadeIn());
     }
@@ -132,12 +147,37 @@ if (move.category == MoveCategory.Status)
 }
 else
 {
-    enemyHP -= move.power;
-    if (enemyHP < 0) enemyHP = 0;
+    float multiplier =
+        TypeChart.GetMultiplier(move.type, enemyType);
+
+    int damage =
+        Mathf.RoundToInt(move.power * multiplier);
+
+    enemyHP -= damage;
+
+    if (enemyHP < 0)
+        enemyHP = 0;
 
     UpdateHPText();
 
-    resultText.text = enemyName + " took " + move.power + " damage!";
+    if (multiplier > 1f)
+    {
+        resultText.text =
+            enemyName + " took " + damage +
+            " damage!\nこうかはばつぐんだ！";
+    }
+    else if (multiplier < 1f)
+    {
+        resultText.text =
+            enemyName + " took " + damage +
+            " damage!\nこうかはいまひとつのようだ";
+    }
+    else
+    {
+        resultText.text =
+            enemyName + " took " + damage + " damage!";
+    }
+
     yield return new WaitForSeconds(0.7f);
 }
 
@@ -365,6 +405,36 @@ private void ApplyMoveEffect(MoveData move)
         if (enemyAttackPower < 1)
             enemyAttackPower = 1;
     }
+}
+
+public void OnMove3Button()
+{
+    if (battleEnded) return;
+
+    if (PartyState.move3.currentPP <= 0)
+    {
+        resultText.text = "PPがない！";
+        return;
+    }
+
+    PartyState.move3.currentPP--;
+    UpdateUI();
+    StartCoroutine(PlayerAttackSequence(PartyState.move3));
+}
+
+public void OnMove4Button()
+{
+    if (battleEnded) return;
+
+    if (PartyState.move4.currentPP <= 0)
+    {
+        resultText.text = "PPがない！";
+        return;
+    }
+
+    PartyState.move4.currentPP--;
+    UpdateUI();
+    StartCoroutine(PlayerAttackSequence(PartyState.move4));
 }
 }
 

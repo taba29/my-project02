@@ -27,6 +27,7 @@ public class BattleTrigger : MonoBehaviour
                 BattleState.currentEnemyAttackPower = battleEnemy.enemyData.attackPower;
                 BattleState.currentEnemySprite = battleEnemy.enemyData.enemySprite;
                 BattleState.currentBattleBackgroundSprite = battleEnemy.enemyData.battleBackgroundSprite;
+                BattleState.currentEnemyType = battleEnemy.enemyData.type;
             }
             else
             {

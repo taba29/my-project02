@@ -17,4 +17,6 @@ public static class BattleState
 
     public static Vector3 initialPlayerPosition = Vector3.zero;
     public static bool hasInitialPlayerPosition = false;
+
+    public static string currentEnemyType;
 }

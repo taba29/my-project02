@@ -86,6 +86,7 @@ move4Text.text =
         enemyName = BattleState.currentEnemyName;
         enemyHP = BattleState.currentEnemyHP;
         enemyAttackPower = BattleState.currentEnemyAttackPower;
+        enemyType = BattleState.currentEnemyType;
         enemyMaxHP = enemyHP;
 
         if (string.IsNullOrEmpty(enemyName))
@@ -335,6 +336,16 @@ void UpdateUI()
     PartyState.move2.moveName + "\n" +
     PartyState.move2.currentPP + " / " +
     PartyState.move2.maxPP;
+
+    move3Text.text =
+    PartyState.move3.moveName + "\n" +
+    PartyState.move3.currentPP + " / " +
+    PartyState.move3.maxPP;
+
+move4Text.text =
+    PartyState.move4.moveName + "\n" +
+    PartyState.move4.currentPP + " / " +
+    PartyState.move4.maxPP;
 }
 
 public void OnMove2Button()

@@ -7,6 +7,9 @@ public class EnemyData : ScriptableObject
     public string enemyName = "Slime";
     public int maxHP = 20;
     public int attackPower = 4;
+    
+    public string type = "Normal";
+    
     public Sprite enemySprite;
     public Sprite battleBackgroundSprite;
 }

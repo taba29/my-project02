@@ -147,9 +147,13 @@ if (move.category == MoveCategory.Status)
     yield return new WaitForSeconds(0.7f);
 }
 else
-{
+{   
+   
+
     float multiplier =
         TypeChart.GetMultiplier(move.type, enemyType);
+        
+   
 
     int damage =
         Mathf.RoundToInt(move.power * multiplier);

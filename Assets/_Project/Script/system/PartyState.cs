@@ -21,7 +21,7 @@ public static MoveData move1 = new MoveData
     maxPP = 35,
     accuracy = 100,
     category = MoveCategory.Physical,
-    type = "Fire",
+    type = "Normal",
     effect = ""
 };
 
@@ -51,13 +51,17 @@ public static MoveData move3 = new MoveData
 
 public static MoveData move4 = new MoveData
 {
-    moveName = "まもる",
-    power = 0,
-    currentPP = 10,
-    maxPP = 10,
+    moveName = "ひのこ",
+    power = 15,
+    currentPP = 25,
+    maxPP = 25,
     accuracy = 100,
-    category = MoveCategory.Status,
-    type = "Normal",
+    category = MoveCategory.Special,
+    type = "Fire",
     effect = ""
 };
+
+
 }
+
+

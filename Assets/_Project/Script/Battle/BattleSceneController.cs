@@ -16,6 +16,7 @@ public class BattleSceneController : MonoBehaviour
 [SerializeField] private TMP_Text move4Text;
 [SerializeField] private Button move3Button;
 [SerializeField] private Button move4Button;
+[SerializeField] private Image fireEffect;
 
 
 
@@ -52,6 +53,7 @@ private int enemyMaxHP;
 
     private void Start()
     {
+        fireEffect.gameObject.SetActive(false);
         LoadEnemyDataFromState();
 
         UpdateHPText();
@@ -120,6 +122,11 @@ move4Text.text =
         resultText.text = move.moveName + "！";
         yield return new WaitForSeconds(0.3f);
         
+        if (move.moveName == "ひのこ")
+{
+    yield return StartCoroutine(
+        PlayFireEffect());
+}
 
         if (Random.Range(0, 100) >= move.accuracy)
 {
@@ -450,6 +457,37 @@ public void OnMove4Button()
     PartyState.move4.currentPP--;
     UpdateUI();
     StartCoroutine(PlayerAttackSequence(PartyState.move4));
+}
+
+private IEnumerator PlayFireEffect()
+{
+    fireEffect.gameObject.SetActive(true);
+
+    Vector3 startPos =
+        fireEffect.transform.position;
+
+    Vector3 targetPos =
+        enemyImage.transform.position;
+
+    float time = 0f;
+
+    while (time < 0.3f)
+    {
+        time += Time.deltaTime;
+
+        fireEffect.transform.position =
+            Vector3.Lerp(
+                startPos,
+                targetPos,
+                time / 0.3f);
+
+        yield return null;
+    }
+
+    fireEffect.gameObject.SetActive(false);
+
+    fireEffect.transform.position =
+        startPos;
 }
 }
 

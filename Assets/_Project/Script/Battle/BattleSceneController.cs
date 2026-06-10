@@ -18,6 +18,9 @@ public class BattleSceneController : MonoBehaviour
 [SerializeField] private Button move4Button;
 [SerializeField] private Image fireEffect;
 
+[SerializeField] private Sprite fireSprite;
+[SerializeField] private Sprite slashSprite;
+
 
 
 [SerializeField] private TMP_Text move1Text;
@@ -124,8 +127,13 @@ move4Text.text =
         
         if (move.moveName == "ひのこ")
 {
+    fireEffect.sprite = fireSprite;
+
     yield return StartCoroutine(
         PlayFireEffect());
+
+        yield return StartCoroutine(
+    FlashEnemy());
 }
 
         if (Random.Range(0, 100) >= move.accuracy)
@@ -489,5 +497,14 @@ private IEnumerator PlayFireEffect()
     fireEffect.transform.position =
         startPos;
 }
+
+private IEnumerator FlashEnemy()
+{
+    enemyImage.color = Color.red;
+    yield return new WaitForSeconds(0.1f);
+    enemyImage.color = Color.white;
+}
+
+
 }
 

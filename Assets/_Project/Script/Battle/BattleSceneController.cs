@@ -136,6 +136,17 @@ move4Text.text =
     FlashEnemy());
 }
 
+if (move.moveName == "ひっかく")
+{
+    fireEffect.sprite = slashSprite;
+
+    yield return StartCoroutine(
+        PlayFireEffect());
+
+    yield return StartCoroutine(
+        FlashEnemy());
+}
+
         if (Random.Range(0, 100) >= move.accuracy)
 {
     resultText.text = move.moveName + " は外れた！";

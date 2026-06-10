@@ -30,3 +30,5 @@ Assets/AssetStoreTools*
 
 mono_crash.*.json
 *_BurstDebugInformation_DoNotShip/
+
+Assets/_Project/Audio/BGM/

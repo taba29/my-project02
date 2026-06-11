@@ -21,6 +21,9 @@ public class BattleSceneController : MonoBehaviour
 [SerializeField] private Sprite fireSprite;
 [SerializeField] private Sprite slashSprite;
 
+[SerializeField] private AudioSource victoryBGM;
+[SerializeField] private AudioSource battleBGM;
+
 
 
 [SerializeField] private TMP_Text move1Text;
@@ -242,7 +245,19 @@ else
         "Victory!\nEXP +10";
 }
 
+yield return StartCoroutine(
+    FadeOutBGM(battleBGM, 1f));
+
+victoryBGM.Play();
+
 yield return new WaitForSeconds(2f);
+
+yield return StartCoroutine(
+    FadeOutBGM(victoryBGM, 1f));
+
+
+
+
 
 SceneManager.LoadScene("Map01");
             yield break;
@@ -516,6 +531,20 @@ private IEnumerator FlashEnemy()
     enemyImage.color = Color.white;
 }
 
+private IEnumerator FadeOutBGM(AudioSource source, float duration)
+{
+    float startVolume = source.volume;
+    float time = 0f;
 
+    while (time < duration)
+    {
+        time += Time.deltaTime;
+        source.volume = Mathf.Lerp(startVolume, 0f, time / duration);
+        yield return null;
+    }
+
+    source.Stop();
+    source.volume = startVolume;
+}
 }
 

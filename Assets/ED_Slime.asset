@@ -16,5 +16,6 @@ MonoBehaviour:
   enemyName: Slime
   maxHP: 20
   attackPower: 4
+  type: Grass
   enemySprite: {fileID: -71784513, guid: 344669fc2720145a58a0d9956162999e, type: 3}
   battleBackgroundSprite: {fileID: -23831779, guid: 344669fc2720145a58a0d9956162999e, type: 3}

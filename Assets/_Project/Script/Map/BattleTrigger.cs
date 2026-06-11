@@ -1,10 +1,18 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using UnityEngine.UI;
+
+
 
 public class BattleTrigger : MonoBehaviour
 {
+
+    [SerializeField] private Image battleFlash;
+
     private bool isTriggered = false;
     private BattleEnemy battleEnemy;
+    private bool isStartingBattle = false;
 
     private void Awake()
     {
@@ -40,7 +48,33 @@ public class BattleTrigger : MonoBehaviour
             BattleState.playerWon = false;
             BattleState.playerDefeated = false;
 
-            SceneManager.LoadScene("BattleScene");
-        }
+            StartCoroutine(StartBattle());
+             }
+
     }
+  private IEnumerator StartBattle()
+{
+    isStartingBattle = true;
+
+    Color c = battleFlash.color;
+
+    c.a = 1f;
+    battleFlash.color = c;
+
+    yield return new WaitForSeconds(0.08f);
+
+    float time = 0f;
+
+    while (time < 0.2f)
+    {
+        time += Time.deltaTime;
+
+        c.a = Mathf.Lerp(1f, 0f, time / 0.2f);
+        battleFlash.color = c;
+
+        yield return null;
+    }
+
+    SceneManager.LoadScene("BattleScene");
+}
 }

@@ -1182,7 +1182,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 840733034}
+  m_Father: {fileID: 1697620328}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1284,8 +1284,8 @@ MonoBehaviour:
   fireEffect: {fileID: 1368431994}
   fireSprite: {fileID: 967296782, guid: 0839f96c1e02144c8b76e1450e502eea, type: 3}
   slashSprite: {fileID: -702828269, guid: 0839f96c1e02144c8b76e1450e502eea, type: 3}
-  victoryBGM: {fileID: 154744867}
-  battleBGM: {fileID: 1870461978}
+  victoryBGM: {fileID: 1870461978}
+  battleBGM: {fileID: 154744868}
   move1Text: {fileID: 37952204}
   fadePanel: {fileID: 676356296}
   fadeDuration: 0.5
@@ -1331,7 +1331,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 508555878}
-  - {fileID: 681776628}
   - {fileID: 1025579564}
   - {fileID: 1952198326}
   - {fileID: 1411453753}
@@ -2701,6 +2700,7 @@ RectTransform:
   - {fileID: 676356295}
   - {fileID: 840733034}
   - {fileID: 2106237339}
+  - {fileID: 681776628}
   - {fileID: 1368431993}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2871,7 +2871,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7c6989ca5818842d88bfe8116c09d809, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
   Loop: 0

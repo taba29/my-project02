@@ -6,7 +6,7 @@ using TMPro;
 
 public class BattleSceneController : MonoBehaviour
 {
-   [SerializeField] private RectTransform playerHPBarFill;
+[SerializeField] private RectTransform playerHPBarFill;
 [SerializeField] private RectTransform enemyHPBarFill;
 [SerializeField] private float maxPlayerHPBarWidth = 398f;
 [SerializeField] private float maxEnemyHPBarWidth = 398f;
@@ -17,12 +17,15 @@ public class BattleSceneController : MonoBehaviour
 [SerializeField] private Button move3Button;
 [SerializeField] private Button move4Button;
 [SerializeField] private Image fireEffect;
+[SerializeField] private Image playerImage;
 
 [SerializeField] private Sprite fireSprite;
 [SerializeField] private Sprite slashSprite;
 
 [SerializeField] private AudioSource victoryBGM;
 [SerializeField] private AudioSource battleBGM;
+
+
 
 
 
@@ -122,8 +125,11 @@ move4Text.text =
 
     private IEnumerator PlayerAttackSequence(MoveData move)
     {
+        
         move1Button.interactable = false;
-        move2Button.interactable = false;
+move2Button.interactable = false;
+move3Button.interactable = false;
+move4Button.interactable = false;
         
         resultText.text = move.moveName + "！";
         yield return new WaitForSeconds(0.3f);
@@ -144,10 +150,8 @@ if (move.moveName == "ひっかく")
     fireEffect.sprite = slashSprite;
 
     yield return StartCoroutine(
-        PlayFireEffect());
+        PlayScratchAttack());
 
-    yield return StartCoroutine(
-        FlashEnemy());
 }
 
         if (Random.Range(0, 100) >= move.accuracy)
@@ -497,31 +501,35 @@ private IEnumerator PlayFireEffect()
 {
     fireEffect.gameObject.SetActive(true);
 
-    Vector3 startPos =
-        fireEffect.transform.position;
+    Vector3 startPos = fireEffect.transform.position;
+    Vector3 targetPos = enemyImage.transform.position;
 
-    Vector3 targetPos =
-        enemyImage.transform.position;
+    Vector3 startScale = Vector3.one * 0.5f;
+    Vector3 endScale = Vector3.one * 1.4f;
+
+    fireEffect.transform.localScale = startScale;
 
     float time = 0f;
+    float duration = 0.3f;
 
-    while (time < 0.3f)
+    while (time < duration)
     {
         time += Time.deltaTime;
+        float t = time / duration;
 
         fireEffect.transform.position =
-            Vector3.Lerp(
-                startPos,
-                targetPos,
-                time / 0.3f);
+            Vector3.Lerp(startPos, targetPos, t);
+
+        fireEffect.transform.localScale =
+            Vector3.Lerp(startScale, endScale, t);
 
         yield return null;
     }
 
     fireEffect.gameObject.SetActive(false);
 
-    fireEffect.transform.position =
-        startPos;
+    fireEffect.transform.position = startPos;
+    fireEffect.transform.localScale = Vector3.one;
 }
 
 private IEnumerator FlashEnemy()
@@ -545,6 +553,95 @@ private IEnumerator FadeOutBGM(AudioSource source, float duration)
 
     source.Stop();
     source.volume = startVolume;
+}
+
+private IEnumerator PlayScratchAttack()
+{
+    if (playerImage == null)
+    {
+        Debug.LogError("playerImage が Inspector に設定されていません！");
+        yield break;
+    }
+
+    if (enemyImage == null)
+    {
+        Debug.LogError("enemyImage が Inspector に設定されていません！");
+        yield break;
+    }
+
+    if (fireEffect == null || slashSprite == null)
+    {
+        Debug.LogError("fireEffect または slashSprite が設定されていません！");
+        yield break;
+    }
+
+    RectTransform playerRT = playerImage.rectTransform;
+
+    Vector2 originalPos = playerRT.anchoredPosition;
+    Vector3 originalScale = playerRT.localScale;
+
+    Vector2 attackPos = originalPos + new Vector2(90f, 0f);
+
+    float time = 0f;
+    float dashDuration = 0.08f;
+
+    // 前進＋横伸び
+    while (time < dashDuration)
+    {
+        time += Time.deltaTime;
+        float t = time / dashDuration;
+
+        playerRT.anchoredPosition =
+            Vector2.Lerp(originalPos, attackPos, t);
+
+        playerRT.localScale =
+            Vector3.Lerp(
+                originalScale,
+                new Vector3(originalScale.x * 1.25f, originalScale.y * 0.85f, 1f),
+                t);
+
+        yield return null;
+    }
+
+    // 斬撃表示
+    fireEffect.sprite = slashSprite;
+    fireEffect.gameObject.SetActive(true);
+    fireEffect.transform.position = enemyImage.transform.position;
+    fireEffect.transform.localScale = Vector3.one * 1.8f;
+
+    yield return new WaitForSeconds(0.08f);
+
+    fireEffect.transform.localScale = Vector3.one * 2.2f;
+
+    yield return new WaitForSeconds(0.07f);
+
+    fireEffect.gameObject.SetActive(false);
+
+    yield return StartCoroutine(FlashEnemy());
+
+    // 戻る
+    time = 0f;
+    float returnDuration = 0.12f;
+
+    while (time < returnDuration)
+    {
+        time += Time.deltaTime;
+        float t = time / returnDuration;
+
+        playerRT.anchoredPosition =
+            Vector2.Lerp(attackPos, originalPos, t);
+
+        playerRT.localScale =
+            Vector3.Lerp(
+                new Vector3(originalScale.x * 1.25f, originalScale.y * 0.85f, 1f),
+                originalScale,
+                t);
+
+        yield return null;
+    }
+
+    playerRT.anchoredPosition = originalPos;
+    playerRT.localScale = originalScale;
 }
 }
 

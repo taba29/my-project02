@@ -270,6 +270,8 @@ SceneManager.LoadScene("Map01");
 
 move1Button.interactable = true;
 move2Button.interactable = true;
+move3Button.interactable = true;
+move4Button.interactable = true;
     }
 
     public void BackToMap()
@@ -557,6 +559,9 @@ private IEnumerator FadeOutBGM(AudioSource source, float duration)
 
 private IEnumerator PlayScratchAttack()
 {
+Vector3 effectOriginalPos = fireEffect.transform.position;
+Vector3 effectOriginalScale = fireEffect.transform.localScale;
+
     if (playerImage == null)
     {
         Debug.LogError("playerImage が Inspector に設定されていません！");
@@ -617,7 +622,9 @@ private IEnumerator PlayScratchAttack()
 
     fireEffect.gameObject.SetActive(false);
 
-    yield return StartCoroutine(FlashEnemy());
+yield return StartCoroutine(HitStop(0.05f));
+
+yield return StartCoroutine(FlashEnemy());
 
     // 戻る
     time = 0f;
@@ -642,6 +649,18 @@ private IEnumerator PlayScratchAttack()
 
     playerRT.anchoredPosition = originalPos;
     playerRT.localScale = originalScale;
+
+    fireEffect.transform.position = effectOriginalPos;
+fireEffect.transform.localScale = effectOriginalScale;
+}
+
+private IEnumerator HitStop(float duration)
+{
+    Time.timeScale = 0f;
+
+    yield return new WaitForSecondsRealtime(duration);
+
+    Time.timeScale = 1f;
 }
 }
 

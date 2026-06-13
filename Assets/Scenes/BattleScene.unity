@@ -1282,6 +1282,7 @@ MonoBehaviour:
   move3Button: {fileID: 2018650961}
   move4Button: {fileID: 984881660}
   fireEffect: {fileID: 1368431994}
+  playerImage: {fileID: 2106237341}
   fireSprite: {fileID: 967296782, guid: 0839f96c1e02144c8b76e1450e502eea, type: 3}
   slashSprite: {fileID: -702828269, guid: 0839f96c1e02144c8b76e1450e502eea, type: 3}
   victoryBGM: {fileID: 1870461978}
@@ -3458,7 +3459,7 @@ GameObject:
   - component: {fileID: 2106237340}
   - component: {fileID: 2106237341}
   m_Layer: 5
-  m_Name: BackgroundImage
+  m_Name: PlayerImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -25,6 +25,9 @@ public class BattleSceneController : MonoBehaviour
 [SerializeField] private AudioSource victoryBGM;
 [SerializeField] private AudioSource battleBGM;
 
+[SerializeField] private AudioSource seAudioSource;
+[SerializeField] private AudioClip scratchSE;
+[SerializeField] private AudioClip fireSE;
 
 
 
@@ -607,6 +610,13 @@ Vector3 effectOriginalScale = fireEffect.transform.localScale;
 
         yield return null;
     }
+
+    // 斬撃表示
+if (seAudioSource != null && scratchSE != null)
+{
+    seAudioSource.PlayOneShot(scratchSE);
+}
+
 
     // 斬撃表示
     fireEffect.sprite = slashSprite;

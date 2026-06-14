@@ -30,9 +30,15 @@ public class BattleSceneController : MonoBehaviour
 [SerializeField] private AudioClip fireSE;
 
 [SerializeField] private Image attackDarkPanel;
-
+[SerializeField] private Image attackSpeedLine;
 
 [SerializeField] private TMP_Text move1Text;
+
+[SerializeField] private SpeedLineScroller[] speedLines;
+[SerializeField]
+private Image battleGradient;
+
+
 private int enemyMaxHP;
     [Header("Fade")]
     [SerializeField] private Image fadePanel;
@@ -100,6 +106,22 @@ move4Text.text =
     c.a = 0f;
     attackDarkPanel.color = c;
     attackDarkPanel.gameObject.SetActive(false);
+}
+
+if (attackSpeedLine != null)
+{
+    Color c = attackSpeedLine.color;
+    c.a = 0f;
+    attackSpeedLine.color = c;
+    attackSpeedLine.gameObject.SetActive(false);
+}
+
+if (battleGradient != null)
+{
+    Color c = battleGradient.color;
+    c.a = 0f;
+    battleGradient.color = c;
+    battleGradient.gameObject.SetActive(false);
 }
     }
 
@@ -605,6 +627,13 @@ Vector3 effectOriginalScale = fireEffect.transform.localScale;
     Vector2 attackPos = originalPos + new Vector2(90f, 0f);
 
     StartAttackDark();
+    StartGradient();
+    StartSpeedLine();
+
+    
+
+
+
 
     float time = 0f;
     float dashDuration = 0.08f;
@@ -673,6 +702,8 @@ yield return StartCoroutine(FlashEnemy());
     playerRT.anchoredPosition = originalPos;
     playerRT.localScale = originalScale;
 
+    EndSpeedLine();
+    EndGradient();
     EndAttackDark();
 
     fireEffect.transform.position = effectOriginalPos;
@@ -756,5 +787,50 @@ private void EndAttackDark()
 
     attackDarkPanel.gameObject.SetActive(false);
 }
+private void StartSpeedLine()
+{
+    foreach (SpeedLineScroller line in speedLines)
+    {
+        if (line != null)
+            line.Show();
+    }
+}
+
+private void EndSpeedLine()
+{
+    foreach (SpeedLineScroller line in speedLines)
+    {
+        if (line != null)
+            line.Hide();
+    }
+}
+
+private void StartGradient()
+{
+    if (battleGradient == null)
+        return;
+
+    battleGradient.gameObject.SetActive(true);
+
+    Color c = battleGradient.color;
+    c.a = 0.7f;
+
+    battleGradient.color = c;
+}
+
+private void EndGradient()
+{
+    if (battleGradient == null)
+        return;
+
+    Color c = battleGradient.color;
+    c.a = 0f;
+
+    battleGradient.color = c;
+
+    battleGradient.gameObject.SetActive(false);
+}
+
+
 }
 

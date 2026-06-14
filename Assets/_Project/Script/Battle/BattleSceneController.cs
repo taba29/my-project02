@@ -29,7 +29,7 @@ public class BattleSceneController : MonoBehaviour
 [SerializeField] private AudioClip scratchSE;
 [SerializeField] private AudioClip fireSE;
 
-
+[SerializeField] private Image attackDarkPanel;
 
 
 [SerializeField] private TMP_Text move1Text;
@@ -93,6 +93,14 @@ move4Text.text =
     PartyState.move4.maxPP;
 
         StartCoroutine(FadeIn());
+
+        if (attackDarkPanel != null)
+{
+    Color c = attackDarkPanel.color;
+    c.a = 0f;
+    attackDarkPanel.color = c;
+    attackDarkPanel.gameObject.SetActive(false);
+}
     }
 
     private void LoadEnemyDataFromState()
@@ -504,6 +512,11 @@ public void OnMove4Button()
 
 private IEnumerator PlayFireEffect()
 {
+    if (seAudioSource != null && fireSE != null)
+{
+    seAudioSource.PlayOneShot(fireSE);
+}
+
     fireEffect.gameObject.SetActive(true);
 
     Vector3 startPos = fireEffect.transform.position;
@@ -562,8 +575,7 @@ private IEnumerator FadeOutBGM(AudioSource source, float duration)
 
 private IEnumerator PlayScratchAttack()
 {
-Vector3 effectOriginalPos = fireEffect.transform.position;
-Vector3 effectOriginalScale = fireEffect.transform.localScale;
+
 
     if (playerImage == null)
     {
@@ -582,6 +594,8 @@ Vector3 effectOriginalScale = fireEffect.transform.localScale;
         Debug.LogError("fireEffect または slashSprite が設定されていません！");
         yield break;
     }
+    Vector3 effectOriginalPos = fireEffect.transform.position;
+Vector3 effectOriginalScale = fireEffect.transform.localScale;
 
     RectTransform playerRT = playerImage.rectTransform;
 
@@ -589,6 +603,8 @@ Vector3 effectOriginalScale = fireEffect.transform.localScale;
     Vector3 originalScale = playerRT.localScale;
 
     Vector2 attackPos = originalPos + new Vector2(90f, 0f);
+
+    StartAttackDark();
 
     float time = 0f;
     float dashDuration = 0.08f;
@@ -618,19 +634,16 @@ if (seAudioSource != null && scratchSE != null)
 }
 
 
-    // 斬撃表示
-    fireEffect.sprite = slashSprite;
-    fireEffect.gameObject.SetActive(true);
-    fireEffect.transform.position = enemyImage.transform.position;
-    fireEffect.transform.localScale = Vector3.one * 1.8f;
 
-    yield return new WaitForSeconds(0.08f);
 
-    fireEffect.transform.localScale = Vector3.one * 2.2f;
-
-    yield return new WaitForSeconds(0.07f);
-
-    fireEffect.gameObject.SetActive(false);
+   if (enemyHP <= enemyMaxHP / 2)
+{
+    yield return StartCoroutine(PlayTripleSlashEffect());
+}
+else
+{
+    yield return StartCoroutine(PlaySingleSlashEffect());
+}
 
 yield return StartCoroutine(HitStop(0.05f));
 
@@ -660,8 +673,55 @@ yield return StartCoroutine(FlashEnemy());
     playerRT.anchoredPosition = originalPos;
     playerRT.localScale = originalScale;
 
+    EndAttackDark();
+
     fireEffect.transform.position = effectOriginalPos;
 fireEffect.transform.localScale = effectOriginalScale;
+}
+private IEnumerator PlaySingleSlashEffect()
+{
+    fireEffect.sprite = slashSprite;
+    fireEffect.gameObject.SetActive(true);
+
+    fireEffect.transform.position = enemyImage.transform.position;
+    fireEffect.transform.localScale = Vector3.one * 2.0f;
+
+    yield return new WaitForSeconds(0.12f);
+
+    fireEffect.gameObject.SetActive(false);
+}
+private IEnumerator PlayTripleSlashEffect()
+{
+    fireEffect.sprite = slashSprite;
+
+    Vector3 centerPos = enemyImage.transform.position;
+
+    Vector3[] offsets =
+    {
+        new Vector3(-30f, 20f, 0f),
+        new Vector3(20f, 0f, 0f),
+        new Vector3(-10f, -25f, 0f)
+    };
+
+    float[] scales =
+    {
+        1.5f,
+        1.8f,
+        2.2f
+    };
+
+    for (int i = 0; i < 3; i++)
+    {
+        fireEffect.gameObject.SetActive(true);
+        fireEffect.transform.position = centerPos + offsets[i];
+        fireEffect.transform.localScale = Vector3.one * scales[i];
+
+        yield return new WaitForSeconds(0.05f);
+
+        fireEffect.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(0.03f);
+    }
 }
 
 private IEnumerator HitStop(float duration)
@@ -671,6 +731,30 @@ private IEnumerator HitStop(float duration)
     yield return new WaitForSecondsRealtime(duration);
 
     Time.timeScale = 1f;
+}
+
+private void StartAttackDark()
+{
+    if (attackDarkPanel == null)
+        return;
+
+    attackDarkPanel.gameObject.SetActive(true);
+
+    Color color = attackDarkPanel.color;
+    color.a = 0.35f;
+    attackDarkPanel.color = color;
+}
+
+private void EndAttackDark()
+{
+    if (attackDarkPanel == null)
+        return;
+
+    Color color = attackDarkPanel.color;
+    color.a = 0f;
+    attackDarkPanel.color = color;
+
+    attackDarkPanel.gameObject.SetActive(false);
 }
 }
 

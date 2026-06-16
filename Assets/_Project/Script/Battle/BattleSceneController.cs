@@ -38,6 +38,8 @@ public class BattleSceneController : MonoBehaviour
 [SerializeField]
 private Image battleGradient;
 
+[SerializeField] private Image hitExplosion;
+[SerializeField] private Image shockwaveEffect;
 
 private int enemyMaxHP;
     [Header("Fade")]
@@ -123,6 +125,16 @@ if (battleGradient != null)
     battleGradient.color = c;
     battleGradient.gameObject.SetActive(false);
 }
+
+if (hitExplosion != null)
+{
+    hitExplosion.gameObject.SetActive(false);
+}
+
+if (shockwaveEffect != null)
+{
+    shockwaveEffect.gameObject.SetActive(false);
+}
     }
 
     private void LoadEnemyDataFromState()
@@ -160,9 +172,9 @@ if (battleGradient != null)
     {
         
         move1Button.interactable = false;
-move2Button.interactable = false;
-move3Button.interactable = false;
-move4Button.interactable = false;
+        move2Button.interactable = false;
+        move3Button.interactable = false;
+        move4Button.interactable = false;
         
         resultText.text = move.moveName + "！";
         yield return new WaitForSeconds(0.3f);
@@ -171,11 +183,9 @@ move4Button.interactable = false;
 {
     fireEffect.sprite = fireSprite;
 
-    yield return StartCoroutine(
-        PlayFireEffect());
-
-        yield return StartCoroutine(
-    FlashEnemy());
+   yield return StartCoroutine(PlayFireEffect());
+yield return StartCoroutine(PlayHitExplosion());
+yield return StartCoroutine(FlashEnemy());
 }
 
 if (move.moveName == "ひっかく")
@@ -195,8 +205,9 @@ if (move.moveName == "ひっかく")
     yield return StartCoroutine(EnemyAttackSequence());
 
     move1Button.interactable = true;
-    move2Button.interactable = true;
-
+move2Button.interactable = true;
+move3Button.interactable = true;
+move4Button.interactable = true;
     yield break;
 }
 
@@ -673,6 +684,7 @@ else
 {
     yield return StartCoroutine(PlaySingleSlashEffect());
 }
+yield return StartCoroutine(PlayShockwaveEffect());
 
 yield return StartCoroutine(HitStop(0.05f));
 
@@ -831,6 +843,74 @@ private void EndGradient()
     battleGradient.gameObject.SetActive(false);
 }
 
+private IEnumerator PlayHitExplosion()
+{
+    if (hitExplosion == null)
+        yield break;
+
+    hitExplosion.transform.position = enemyImage.transform.position;
+    hitExplosion.transform.localScale = Vector3.one * 0.4f;
+
+    Color c = hitExplosion.color;
+    c.a = 1f;
+    hitExplosion.color = c;
+
+    hitExplosion.gameObject.SetActive(true);
+
+    float time = 0f;
+    float duration = 0.18f;
+
+    while (time < duration)
+    {
+        time += Time.deltaTime;
+        float t = time / duration;
+
+        hitExplosion.transform.localScale =
+            Vector3.Lerp(Vector3.one * 0.4f, Vector3.one * 1.8f, t);
+
+        c.a = Mathf.Lerp(1f, 0f, t);
+        hitExplosion.color = c;
+
+        yield return null;
+    }
+
+    hitExplosion.gameObject.SetActive(false);
+}
+
+
+private IEnumerator PlayShockwaveEffect()
+{
+    if (shockwaveEffect == null || enemyImage == null)
+        yield break;
+
+    shockwaveEffect.transform.position = enemyImage.transform.position;
+    shockwaveEffect.transform.localScale = Vector3.one * 0.15f;
+
+    Color c = shockwaveEffect.color;
+    c.a = 0.9f;
+    shockwaveEffect.color = c;
+
+    shockwaveEffect.gameObject.SetActive(true);
+
+    float time = 0f;
+    float duration = 0.2f;
+
+    while (time < duration)
+    {
+        time += Time.deltaTime;
+        float t = time / duration;
+
+        shockwaveEffect.transform.localScale =
+            Vector3.Lerp(Vector3.one * 0.15f, Vector3.one * 3.0f, t);
+
+        c.a = Mathf.Lerp(0.9f, 0f, t);
+        shockwaveEffect.color = c;
+
+        yield return null;
+    }
+
+    shockwaveEffect.gameObject.SetActive(false);
+}
 
 }
 

@@ -5,10 +5,11 @@ public class AchievementSceneController : MonoBehaviour
 {
     [SerializeField] private TMP_Text achievementText;
 
+
     private void Start()
-    {
-        UpdateAchievementText();
-    }
+{
+    UpdateAchievementText();
+}
 
     private void UpdateAchievementText()
     {
@@ -23,7 +24,7 @@ public class AchievementSceneController : MonoBehaviour
 
     private string GetCheck(bool done)
     {
-        return done ? "☑" : "☐";
+        return done ? "[OK]" : "[  ]";
     }
 
     

@@ -7050,6 +7050,7 @@ GameObject:
   - component: {fileID: 1079246651}
   - component: {fileID: 1079246650}
   - component: {fileID: 1079246649}
+  - component: {fileID: 1079246653}
   m_Layer: 5
   m_Name: BtnAchieve
   m_TagString: Untagged
@@ -7123,9 +7124,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 130638698}
-        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: ShowAchieve
+      - m_Target: {fileID: 1079246653}
+        m_TargetAssemblyTypeName: SceneLink, Assembly-CSharp
+        m_MethodName: Load
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7186,6 +7187,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1079246647}
   m_CullTransparentMesh: 1
+--- !u!114 &1079246653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079246647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad7a9370ae4714e718b15f37b42a930c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: AchievementScene
 --- !u!1 &1122144104
 GameObject:
   m_ObjectHideFlags: 0
@@ -16435,6 +16449,7 @@ GameObject:
   - component: {fileID: 2115747049}
   - component: {fileID: 2115747048}
   - component: {fileID: 2115747047}
+  - component: {fileID: 2115747051}
   m_Layer: 5
   m_Name: BtnReport
   m_TagString: Untagged
@@ -16571,6 +16586,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2115747045}
   m_CullTransparentMesh: 1
+--- !u!114 &2115747051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115747045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad7a9370ae4714e718b15f37b42a930c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: 
 --- !u!1 &2136385452
 GameObject:
   m_ObjectHideFlags: 0

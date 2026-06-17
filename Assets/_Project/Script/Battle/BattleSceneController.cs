@@ -78,6 +78,8 @@ private int enemyMaxHP;
     BGMManager.Instance.StopBGM();
 }
 
+        MissionState.firstBattle = true;
+
         fireEffect.gameObject.SetActive(false);
         LoadEnemyDataFromState();
 
@@ -276,11 +278,19 @@ else
 
             DefeatedEnemyManager.AddDefeatedEnemy(BattleState.currentEnemyId);
 
+            if (enemyName == "スライム")
+{
+    MissionState.defeatSlime = true;
+}
+
             PartyState.exp += 10;
 
 if (PartyState.exp >= PartyState.nextLevelExp)
 {
     PartyState.level++;
+
+    if(PartyState.level >= 2)
+    {MissionState.level2 = true;}
 
     PartyState.exp = 0;
 

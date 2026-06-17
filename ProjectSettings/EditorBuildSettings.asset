@@ -20,7 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Result.unity
     guid: 28980ee69b11d40ecb707c79bc51c3cd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TestScene.unity
     guid: 094c5363c459d422490a1cfce348e07d
   - enabled: 1
@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PartyScene.unity
     guid: 2687e7a58bd714fc7b12a8e5803f1fcb
+  - enabled: 1
+    path: Assets/Scenes/MissionScene.unity
+    guid: 1071b78383af548f793f194a7fcce04e
   m_configObjects: {}

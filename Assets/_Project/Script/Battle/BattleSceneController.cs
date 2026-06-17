@@ -73,6 +73,11 @@ private int enemyMaxHP;
 
     private void Start()
     {
+        if (BGMManager.Instance != null)
+{
+    BGMManager.Instance.StopBGM();
+}
+
         fireEffect.gameObject.SetActive(false);
         LoadEnemyDataFromState();
 

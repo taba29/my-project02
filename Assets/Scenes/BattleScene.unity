@@ -793,7 +793,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &308262950
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1806,7 +1806,7 @@ MonoBehaviour:
   move4Button: {fileID: 984881660}
   fireEffect: {fileID: 1368431994}
   playerImage: {fileID: 2106237341}
-  fireSprite: {fileID: 967296782, guid: 0839f96c1e02144c8b76e1450e502eea, type: 3}
+  fireSprite: {fileID: 21300000, guid: a03fb74f967914a38a2cae693fb4754d, type: 3}
   slashSprite: {fileID: -702828269, guid: 0839f96c1e02144c8b76e1450e502eea, type: 3}
   victoryBGM: {fileID: 1870461978}
   battleBGM: {fileID: 154744868}

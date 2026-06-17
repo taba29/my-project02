@@ -187,7 +187,8 @@ if (shockwaveEffect != null)
         yield return new WaitForSeconds(0.3f);
         
         if (move.moveName == "ひのこ")
-{
+{   AchievementState.useFireMove = true;
+    
     fireEffect.sprite = fireSprite;
 
    yield return StartCoroutine(PlayFireEffect());
@@ -276,6 +277,8 @@ else
             BattleState.playerWon = true;
             BattleState.playerDefeated = false;
 
+            AchievementState.firstVictory = true;
+
             DefeatedEnemyManager.AddDefeatedEnemy(BattleState.currentEnemyId);
 
             if (enemyName == "スライム")
@@ -290,7 +293,9 @@ if (PartyState.exp >= PartyState.nextLevelExp)
     PartyState.level++;
 
     if(PartyState.level >= 2)
-    {MissionState.level2 = true;}
+    {MissionState.level2 = true;
+    
+    AchievementState.reachLevel2 = true;}
 
     PartyState.exp = 0;
 

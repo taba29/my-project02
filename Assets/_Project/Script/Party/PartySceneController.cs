@@ -58,8 +58,5 @@ move2Text.text =
     hpBarFill.sizeDelta = size;
 }
 
-    public void BackToMap()
-{
-    SceneManager.LoadScene("Map01");
-}
+ 
 }

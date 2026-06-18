@@ -10,13 +10,13 @@ public class MissionSceneController : MonoBehaviour
         missionText.text =
             "任務\n\n" +
 
-            (MissionState.firstBattle ? "☑ " : "☐ ")
+            (MissionState.firstBattle ? "good " : "☐ ")
             + "はじめて戦闘する\n" +
 
-            (MissionState.defeatSlime ? "☑ " : "☐ ")
+            (MissionState.defeatSlime ? "good " : "☐ ")
             + "スライムを1体倒す\n" +
 
-            (MissionState.level2 ? "☑ " : "☐ ")
+            (MissionState.level2 ? "good " : "☐ ")
             + "レベル2になる";
     }
 }

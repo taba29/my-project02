@@ -14,6 +14,8 @@ public class SceneLink : MonoBehaviour
 
     MapReturnState.returnPosition = player.transform.position;
     MapReturnState.hasReturnPosition = true;
+    MapReturnState.returnSceneName =
+    UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 }
 
     public void Load()
@@ -28,4 +30,17 @@ public class SceneLink : MonoBehaviour
         
         SceneManager.LoadScene(sceneName);
     }
+
+    public void ReturnToMap()
+{
+    MapReturnState.hasReturnPosition = true;
+
+    if (string.IsNullOrEmpty(MapReturnState.returnSceneName))
+    {
+        SceneManager.LoadScene("Map01");
+        return;
+    }
+
+    SceneManager.LoadScene(MapReturnState.returnSceneName);
+}
 }

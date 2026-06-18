@@ -14281,8 +14281,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1669129134}
-        m_TargetAssemblyTypeName: OpenItemsSceneButton, Assembly-CSharp
-        m_MethodName: OpenItemsScene
+        m_TargetAssemblyTypeName: SceneLink, Assembly-CSharp
+        m_MethodName: Load
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14365,9 +14365,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1669129127}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 307227b777be1437a98907d1e9fc0ca5, type: 3}
+  m_Script: {fileID: 11500000, guid: ad7a9370ae4714e718b15f37b42a930c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneName: 
 --- !u!1 &1670159159
 GameObject:
   m_ObjectHideFlags: 0
@@ -16523,9 +16524,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 130638698}
-        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: ShowReport
+      - m_Target: {fileID: 2115747051}
+        m_TargetAssemblyTypeName: SceneLink, Assembly-CSharp
+        m_MethodName: Load
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -16598,7 +16599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad7a9370ae4714e718b15f37b42a930c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: 
+  sceneName: ReportScene
 --- !u!1 &2136385452
 GameObject:
   m_ObjectHideFlags: 0

@@ -55,4 +55,9 @@ public class InventoryManager : MonoBehaviour
 {
     return items;
 }
+
+public void ClearItems()
+{
+    items.Clear();
+}
 }

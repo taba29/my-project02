@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 [System.Serializable]
 public class SaveData
 {
@@ -20,4 +22,6 @@ public class SaveData
 public float playerX;
 public float playerY;
 public float playerZ;
+
+public List<ItemSaveData> items = new();
 }

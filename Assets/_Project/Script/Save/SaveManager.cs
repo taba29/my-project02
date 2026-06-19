@@ -17,6 +17,19 @@ public static class SaveManager
     {
         SaveData data = new SaveData();
 
+        data.items.Clear();
+
+foreach (var item in InventoryManager.Instance.GetAllItems())
+{
+    ItemSaveData itemSaveData = new ItemSaveData
+    {
+        itemName = item.Key,
+        count = item.Value
+    };
+
+    data.items.Add(itemSaveData);
+}
+
         // Party
         data.level = PartyState.level;
         data.exp = PartyState.exp;
@@ -81,6 +94,20 @@ if (MapReturnState.hasReturnPosition)
         AchievementState.firstVictory = data.achievementFirstVictory;
         AchievementState.reachLevel2 = data.achievementReachLevel2;
         AchievementState.useFireMove = data.achievementUseFireMove;
+
+
+        // Inventory
+InventoryManager.Instance.ClearItems();
+// Inventory
+if (InventoryManager.Instance != null)
+{
+    InventoryManager.Instance.ClearItems();
+
+    foreach (ItemSaveData item in data.items)
+    {
+        InventoryManager.Instance.AddItem(item.itemName, item.count);
+    }
+}
 
         BattleState.playerReturnPosition =
     new Vector3(data.playerX, data.playerY, data.playerZ);

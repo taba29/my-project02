@@ -11,6 +11,8 @@ public class PartySceneController : MonoBehaviour
 
     public TMP_Text move1Text;
     public TMP_Text move2Text;
+    public TMP_Text move3Text;
+public TMP_Text move4Text;
     
     [SerializeField] private RectTransform hpBarFill;
 [SerializeField] private float maxBarWidth = 490f;
@@ -44,6 +46,15 @@ move2Text.text =
     PartyState.move2.currentPP + " / " +
     PartyState.move2.maxPP;
     
+    move3Text.text =
+    PartyState.move3.moveName + " " +
+    PartyState.move3.currentPP + " / " +
+    PartyState.move3.maxPP;
+
+move4Text.text =
+    PartyState.move4.moveName + " " +
+    PartyState.move4.currentPP + " / " +
+    PartyState.move4.maxPP;
             UpdateHPBar();
     }
 

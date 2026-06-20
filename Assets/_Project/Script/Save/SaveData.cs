@@ -23,5 +23,12 @@ public float playerX;
 public float playerY;
 public float playerZ;
 
+public int move1PP;
+public int move2PP;
+public int move3PP;
+public int move4PP;
+
+public List<MoveSaveData> moves = new List<MoveSaveData>();
+
 public List<ItemSaveData> items = new();
 }

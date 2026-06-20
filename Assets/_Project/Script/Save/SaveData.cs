@@ -31,4 +31,8 @@ public int move4PP;
 public List<MoveSaveData> moves = new List<MoveSaveData>();
 
 public List<ItemSaveData> items = new();
+
+public List<string> openedChestIds = new List<string>();
+
+public List<string> defeatedEnemyIds = new List<string>();
 }

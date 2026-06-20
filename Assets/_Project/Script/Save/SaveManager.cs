@@ -1,6 +1,7 @@
 using System.IO;
 using UnityEngine;
 
+
 public static class SaveManager
 {
     private static string SavePath
@@ -75,6 +76,22 @@ foreach (MoveData move in moves)
     };
 
     data.moves.Add(moveSaveData);
+}
+
+// Opened Chests
+data.openedChestIds.Clear();
+
+foreach (string chestId in OpenedChestState.openedChestIds)
+{
+    data.openedChestIds.Add(chestId);
+}
+
+// Defeated Enemies
+data.defeatedEnemyIds.Clear();
+
+foreach (string enemyId in DefeatedEnemyManager.GetAllDefeatedEnemies())
+{
+    data.defeatedEnemyIds.Add(enemyId);
 }
         
         data.sceneName = "Map01";
@@ -154,6 +171,24 @@ if (data.moves != null && data.moves.Count >= 4)
         moves[i].effect = data.moves[i].effect;
     }
 }
+
+// Opened Chests
+OpenedChestState.openedChestIds.Clear();
+
+foreach (string chestId in data.openedChestIds)
+{
+    OpenedChestState.openedChestIds.Add(chestId);
+}
+
+// Defeated Enemies
+DefeatedEnemyManager.Clear();
+
+foreach (string enemyId in data.defeatedEnemyIds)
+{
+    DefeatedEnemyManager.AddDefeatedEnemy(enemyId);
+}
+
+
 // Inventory
 if (InventoryManager.Instance != null)
 {

@@ -22,4 +22,9 @@ public static class DefeatedEnemyManager
     {
         defeatedEnemyIds.Clear();
     }
+
+    public static IEnumerable<string> GetAllDefeatedEnemies()
+{
+    return defeatedEnemyIds;
+}
 }

@@ -75,6 +75,54 @@ public void SavePlayer(PlayerData data)
 }
 
 
+public void LoadPlayer(string playerName)
+{
+    Debug.Log("LoadPlayer 開始: " + playerName);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+
+    FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+
+    db.Collection("players")
+      .Document(playerName)
+      .GetSnapshotAsync()
+      .ContinueWithOnMainThread(task =>
+      {
+          try
+          {
+              if (!task.IsCompletedSuccessfully)
+              {
+                  Debug.LogError("読込失敗: " + task.Exception);
+                  return;
+              }
+
+              DocumentSnapshot snapshot = task.Result;
+
+              if (!snapshot.Exists)
+              {
+                  Debug.Log("プレイヤーデータがありません: " + playerName);
+                  return;
+              }
+
+              Dictionary<string, object> data = snapshot.ToDictionary();
+
+              PlayerProfileState.playerName = data["playerName"].ToString();
+              PlayerProfileState.level = int.Parse(data["level"].ToString());
+              PlayerProfileState.victoryCount = int.Parse(data["victoryCount"].ToString());
+              PlayerProfileState.defeatCount = int.Parse(data["defeatCount"].ToString());
+
+              Debug.Log("プレイヤー読込成功: " + PlayerProfileState.playerName);
+          }
+          catch (System.Exception e)
+          {
+              Debug.LogError("LoadPlayer内で例外");
+              Debug.LogError(e);
+          }
+      });
+
+#endif
+}
+
 
 
 
@@ -87,7 +135,7 @@ public void SavePlayer(PlayerData data)
 private void Start()
 {
 #if UNITY_ANDROID && !UNITY_EDITOR
-    StartCoroutine(TestSave());
+   // StartCoroutine(TestSave());
 #endif
 }
 private IEnumerator TestSave()
@@ -103,5 +151,9 @@ private IEnumerator TestSave()
     Debug.Log("FirestoreManager Firebase初期化OK");
 
     SaveCurrentPlayer();
+
+    yield return new WaitForSeconds(1f);
+
+    LoadPlayer("Player");
 }
 }

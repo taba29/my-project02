@@ -40,4 +40,6 @@ public void DebugResetSave()
 
     Debug.Log("開発用：セーブ削除＋初期化しました");
 }
+
+
 }

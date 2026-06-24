@@ -44,4 +44,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ReportScene.unity
     guid: 9b4347e1771ca4ef8ac2e3e725c88b63
+  - enabled: 1
+    path: Assets/Scenes/CommunicationScene.unity
+    guid: 9f8a3e9915ddf4699866e62ae3ee45e0
   m_configObjects: {}

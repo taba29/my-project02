@@ -31,11 +31,12 @@ public class FirestoreManager : MonoBehaviour
     PlayerData data = new PlayerData();
 
     data.playerName = PlayerProfileState.playerName;
-    data.level = PlayerProfileState.level;
+    data.level = PartyState.level;
     data.victoryCount = PlayerProfileState.victoryCount;
     data.defeatCount = PlayerProfileState.defeatCount;
 
     Debug.Log("保存する名前: " + data.playerName);
+    Debug.Log("保存するレベル: " + data.level);
 
     SavePlayer(data);
 }
@@ -74,7 +75,6 @@ public void SavePlayer(PlayerData data)
 #endif
 }
 
-
 public void LoadPlayer(string playerName)
 {
     Debug.Log("LoadPlayer 開始: " + playerName);
@@ -83,18 +83,34 @@ public void LoadPlayer(string playerName)
 
     FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
 
+    Debug.Log("GetSnapshotAsync 呼び出し前");
+
     db.Collection("players")
       .Document(playerName)
       .GetSnapshotAsync()
       .ContinueWithOnMainThread(task =>
       {
+          Debug.Log("ContinueWithOnMainThread 開始");
+
           try
           {
               if (!task.IsCompletedSuccessfully)
-              {
-                  Debug.LogError("読込失敗: " + task.Exception);
-                  return;
-              }
+{
+    Debug.LogError("読込失敗");
+    Debug.LogError(task.Exception);
+
+    CommunicationSceneController controller =
+        FindObjectOfType<CommunicationSceneController>();
+
+    if (controller != null)
+    {
+        controller.ShowMessage("クラウド読込失敗");
+    }
+
+    return;
+}
+
+              Debug.Log("task成功");
 
               DocumentSnapshot snapshot = task.Result;
 
@@ -104,6 +120,8 @@ public void LoadPlayer(string playerName)
                   return;
               }
 
+              Debug.Log("snapshot存在あり");
+
               Dictionary<string, object> data = snapshot.ToDictionary();
 
               PlayerProfileState.playerName = data["playerName"].ToString();
@@ -111,7 +129,19 @@ public void LoadPlayer(string playerName)
               PlayerProfileState.victoryCount = int.Parse(data["victoryCount"].ToString());
               PlayerProfileState.defeatCount = int.Parse(data["defeatCount"].ToString());
 
+              PartyState.level = PlayerProfileState.level;
+
               Debug.Log("プレイヤー読込成功: " + PlayerProfileState.playerName);
+              Debug.Log("読込レベル PlayerProfileState = " + PlayerProfileState.level);
+              Debug.Log("読込レベル PartyState = " + PartyState.level);
+
+              CommunicationSceneController controller =
+    FindObjectOfType<CommunicationSceneController>();
+
+if (controller != null)
+{
+    controller.ShowMessage("クラウド読込完了！");
+}
           }
           catch (System.Exception e)
           {
@@ -119,6 +149,8 @@ public void LoadPlayer(string playerName)
               Debug.LogError(e);
           }
       });
+
+    Debug.Log("GetSnapshotAsync 呼び出し後");
 
 #endif
 }

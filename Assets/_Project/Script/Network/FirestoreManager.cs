@@ -35,8 +35,13 @@ public class FirestoreManager : MonoBehaviour
     data.victoryCount = PlayerProfileState.victoryCount;
     data.defeatCount = PlayerProfileState.defeatCount;
 
-    Debug.Log("保存する名前: " + data.playerName);
-    Debug.Log("保存するレベル: " + data.level);
+    data.currentHP = PartyState.currentHP;
+data.maxHP = PartyState.maxHP;
+data.exp = PartyState.exp;
+data.nextLevelExp = PartyState.nextLevelExp;
+
+    Debug.Log("保存するHP: " + data.currentHP + " / " + data.maxHP);
+    Debug.Log("保存するEXP: " + data.exp + " / " + data.nextLevelExp);
 
     SavePlayer(data);
 }
@@ -48,29 +53,44 @@ public void SavePlayer(PlayerData data)
 #if UNITY_ANDROID && !UNITY_EDITOR
 
     FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+Debug.Log("Firestore Instance OK");
 
-    Dictionary<string, object> player = new Dictionary<string, object>()
+Dictionary<string, object> player = new Dictionary<string, object>()
+{
+    { "playerName", data.playerName },
+    { "level", data.level },
+    { "victoryCount", data.victoryCount },
+    { "defeatCount", data.defeatCount },
+
+    { "currentHP", data.currentHP },
+    { "maxHP", data.maxHP },
+    { "exp", data.exp },
+    { "nextLevelExp", data.nextLevelExp }
+};
+
+Debug.Log("Dictionary OK");
+Debug.Log("Before SetAsync");
+
+
+db.Collection("players")
+  .Document(data.playerName)
+  .SetAsync(player)
+  .ContinueWithOnMainThread(task =>
+{
+    Debug.Log("Continue reached");
+
+    if (task.IsCompletedSuccessfully)
     {
-        { "playerName", data.playerName },
-        { "level", data.level },
-        { "victoryCount", data.victoryCount },
-        { "defeatCount", data.defeatCount }
-    };
+        Debug.Log("Firestore Save Success");
+    }
+    else
+    {
+        Debug.LogError("Firestore Save Failed");
+        Debug.LogError(task.Exception);
+    }
+});
 
-    db.Collection("players")
-      .Document(data.playerName)
-      .SetAsync(player)
-      .ContinueWithOnMainThread(task =>
-      {
-          if (task.IsCompletedSuccessfully)
-          {
-              Debug.Log("プレイヤー保存成功");
-          }
-          else
-          {
-              Debug.LogError("プレイヤー保存失敗: " + task.Exception);
-          }
-      });
+Debug.Log("After SetAsync");
 
 #endif
 }
@@ -129,19 +149,26 @@ public void LoadPlayer(string playerName)
               PlayerProfileState.victoryCount = int.Parse(data["victoryCount"].ToString());
               PlayerProfileState.defeatCount = int.Parse(data["defeatCount"].ToString());
 
+              PartyState.currentHP = int.Parse(data["currentHP"].ToString());
+PartyState.maxHP = int.Parse(data["maxHP"].ToString());
+PartyState.exp = int.Parse(data["exp"].ToString());
+PartyState.nextLevelExp = int.Parse(data["nextLevelExp"].ToString());
+
               PartyState.level = PlayerProfileState.level;
 
               Debug.Log("プレイヤー読込成功: " + PlayerProfileState.playerName);
               Debug.Log("読込レベル PlayerProfileState = " + PlayerProfileState.level);
               Debug.Log("読込レベル PartyState = " + PartyState.level);
 
-              CommunicationSceneController controller =
+              CommunicationSceneController controller2 =
     FindObjectOfType<CommunicationSceneController>();
 
-if (controller != null)
+if (controller2 != null)
 {
-    controller.ShowMessage("クラウド読込完了！");
-}
+    controller2.ShowMessage("クラウド読込完了！");
+};
+
+
           }
           catch (System.Exception e)
           {

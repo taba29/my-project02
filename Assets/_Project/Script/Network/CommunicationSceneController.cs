@@ -9,8 +9,13 @@ public class CommunicationSceneController : MonoBehaviour
     public void CloudLoad()
     {
         messageText.text = "読込中...";
-
         FirestoreManager.Instance.LoadPlayer("Player");
+    }
+
+    public void PlayerList()
+    {
+        messageText.text = "プレイヤー一覧取得中...";
+        FirestoreManager.Instance.LoadAllPlayers();
     }
 
     public void Back()

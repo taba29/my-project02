@@ -187,6 +187,41 @@ if (controller2 != null)
 
 
 
+public void LoadAllPlayers()
+{
+    Debug.Log("LoadAllPlayers 開始");
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+
+    FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+
+    db.Collection("players")
+      .GetSnapshotAsync()
+      .ContinueWithOnMainThread(task =>
+      {
+          if (!task.IsCompletedSuccessfully)
+          {
+              Debug.LogError(task.Exception);
+              return;
+          }
+
+          QuerySnapshot snapshot = task.Result;
+
+          foreach (DocumentSnapshot doc in snapshot.Documents)
+          {
+              Dictionary<string, object> data = doc.ToDictionary();
+
+              Debug.Log(
+                  data["playerName"] + " Lv" + data["level"]
+              );
+          }
+      });
+
+#endif
+}
+
+
+
 
 
 

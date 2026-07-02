@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
+using Firebase;
 using Firebase.Firestore;
 using Firebase.Extensions;
 #endif
@@ -183,48 +184,78 @@ if (controller2 != null)
 }
 
 
-
-
-
-
 public void LoadAllPlayers()
 {
-    Debug.Log("LoadAllPlayers 開始");
+    StartCoroutine(LoadAllPlayersCoroutine());
+}
+
+private IEnumerator LoadAllPlayersCoroutine()
+{
+    Debug.Log("LoadAllPlayers Coroutine 開始");
 
 #if UNITY_ANDROID && !UNITY_EDITOR
 
+    if (!FirebaseInitializer.IsInitialized)
+    {
+        Debug.LogError("Firebase not ready");
+        yield break;
+    }
+
     FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+Debug.Log("db = " + db);
 
-    db.Collection("players")
-      .GetSnapshotAsync()
-      .ContinueWithOnMainThread(task =>
-      {
-          if (!task.IsCompletedSuccessfully)
-          {
-              Debug.LogError(task.Exception);
-              return;
-          }
+CollectionReference col = db.Collection("players");
+Debug.Log("Collection = " + col);
 
-          QuerySnapshot snapshot = task.Result;
+Debug.Log("GetSnapshotAsync 作成");
 
-          foreach (DocumentSnapshot doc in snapshot.Documents)
-          {
-              Dictionary<string, object> data = doc.ToDictionary();
+var task = col.GetSnapshotAsync();
 
-              Debug.Log(
-                  data["playerName"] + " Lv" + data["level"]
-              );
-          }
-      });
+    float timer = 0f;
+
+    while (!task.IsCompleted && timer < 10f)
+    {
+        timer += Time.deltaTime;
+        yield return null;
+    }
+
+    if (!task.IsCompleted)
+    {
+        Debug.LogError("Firestore timeout");
+        FindObjectOfType<CommunicationSceneController>()?.ShowMessage("Firestore timeout");
+        yield break;
+    }
+
+    if (!task.IsCompletedSuccessfully)
+    {
+        Debug.LogError("Firestore failed");
+        Debug.LogError(task.Exception);
+        FindObjectOfType<CommunicationSceneController>()?.ShowMessage("Player list failed");
+        yield break;
+    }
+
+    Debug.Log("Firestore success");
+
+    QuerySnapshot snapshot = task.Result;
+
+    string result = "Player List\n\n";
+
+    foreach (DocumentSnapshot doc in snapshot.Documents)
+    {
+        Dictionary<string, object> data = doc.ToDictionary();
+
+        string line = data["playerName"] + " Lv" + data["level"];
+        Debug.Log(line);
+
+        result += line + "\n";
+    }
+
+    FindObjectOfType<CommunicationSceneController>()?.ShowMessage(result);
 
 #endif
+
+yield break;
 }
-
-
-
-
-
-
 
 private void Start()
 {

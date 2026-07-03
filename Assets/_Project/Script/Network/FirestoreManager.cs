@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using TMPro;
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -211,13 +213,18 @@ Debug.Log("GetSnapshotAsync 作成");
 
 var task = col.GetSnapshotAsync();
 
-    float timer = 0f;
+    float startTime = Time.realtimeSinceStartup;
 
-    while (!task.IsCompleted && timer < 10f)
-    {
-        timer += Time.deltaTime;
-        yield return null;
-    }
+while (!task.IsCompleted && Time.realtimeSinceStartup - startTime < 10f)
+{
+    Debug.Log("timer = " + (Time.realtimeSinceStartup - startTime));
+    yield return null;
+}
+
+Debug.Log("while終了");
+Debug.Log("task.IsCompleted = " + task.IsCompleted);
+Debug.Log("task.IsFaulted = " + task.IsFaulted);
+Debug.Log("task.IsCanceled = " + task.IsCanceled);
 
     if (!task.IsCompleted)
     {
@@ -236,22 +243,44 @@ var task = col.GetSnapshotAsync();
 
     Debug.Log("Firestore success");
 
-    QuerySnapshot snapshot = task.Result;
+QuerySnapshot snapshot = task.Result;
 
-    string result = "Player List\n\n";
+string result = "Player List\n\n";
 
-    foreach (DocumentSnapshot doc in snapshot.Documents)
+int count = 0;
+
+foreach (DocumentSnapshot doc in snapshot.Documents)
+{
+    count++;
+
+    Debug.Log("Document = " + doc.Id);
+
+    Dictionary<string, object> data = doc.ToDictionary();
+
+    if (!data.ContainsKey("playerName") || !data.ContainsKey("level"))
     {
-        Dictionary<string, object> data = doc.ToDictionary();
-
-        string line = data["playerName"] + " Lv" + data["level"];
-        Debug.Log(line);
-
-        result += line + "\n";
+        Debug.LogError("必要なキーがないDocument: " + doc.Id);
+        continue;
     }
 
-    FindObjectOfType<CommunicationSceneController>()?.ShowMessage(result);
+    Debug.Log("playerName = " + data["playerName"]);
+    Debug.Log("level = " + data["level"]);
 
+    CommunicationSceneController controller =
+    FindObjectOfType<CommunicationSceneController>();
+
+GameObject row = controller.CreatePlayerRow();
+
+TMP_Text text = row.GetComponentInChildren<TMP_Text>();
+
+text.text = data["playerName"] + " Lv" + data["level"];
+}
+
+Debug.Log("Document Count = " + count);
+
+
+
+    
 #endif
 
 yield break;

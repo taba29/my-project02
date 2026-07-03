@@ -7,6 +7,10 @@ public class CommunicationSceneController : MonoBehaviour
 {
     [SerializeField] private TMP_Text messageText;
 
+    [SerializeField] private Transform content;
+
+[SerializeField] private GameObject playerRowPrefab;
+
     public void CloudLoad()
     {
         messageText.text = "読込中...";
@@ -20,6 +24,12 @@ public class CommunicationSceneController : MonoBehaviour
     Debug.Log("② Instance = " + FirestoreManager.Instance);
 
     messageText.text = "Loading player list...";
+
+   
+
+ClearPlayerRows();
+
+
 
     Debug.Log("③ LoadAllPlayers呼ぶ");
 
@@ -47,5 +57,20 @@ private IEnumerator PlayerListDelay()
     Debug.Log("ShowMessage = " + message);
 
     messageText.text = message;
+
+    Debug.Log("TMP = " + messageText.text);
+}
+
+public void ClearPlayerRows()
+{
+    foreach (Transform child in content)
+    {
+        Destroy(child.gameObject);
+    }
+}
+
+public GameObject CreatePlayerRow()
+{
+    return Instantiate(playerRowPrefab, content);
 }
 }

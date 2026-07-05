@@ -69,8 +69,15 @@ public void ClearPlayerRows()
     }
 }
 
-public GameObject CreatePlayerRow()
+public GameObject CreatePlayerRow(PlayerData data)
 {
-    return Instantiate(playerRowPrefab, content);
+    GameObject row = Instantiate(playerRowPrefab, content);
+
+    PlayerRowButton rowButton =
+        row.GetComponent<PlayerRowButton>();
+
+    rowButton.Setup(data);
+
+    return row;
 }
 }
